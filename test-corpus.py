@@ -104,7 +104,7 @@ def main():
 
         if not os.path.isfile("go.mod"):
             print ("creating running `go mod init")
-            os.system("go mod init")
+            os.system("go mod init github.com/%s" % repo)
             os.system("go get -t .")
 
         for cmd in ("go test -v", "tinygo test -v -short -tags='purego noasm'"):
