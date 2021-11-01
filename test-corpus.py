@@ -27,7 +27,7 @@ repos = [
         { 'repo':    'dgryski/go-krcrypt'},
         { 'repo':    'dgryski/go-linebreak'},
         { 'repo':    'dgryski/go-linlog'},
-        { 'repo':    'dgryski/go-marvin32'},
+        { 'repo':    'dgryski/go-marvin32', 'tags': 'purego'},
         { 'repo':    'dgryski/go-md5crypt'},
         { 'repo':    'dgryski/go-metro'},
         { 'repo':    'dgryski/go-misty1'},
