@@ -255,6 +255,7 @@ repos = [
     # "dgryski/tsip/go" -- requires supporting cd'ing inside a repo
     # "google/btree" -- needs reflect.DeepEqual
     # "golang/snappy" -- needs patching out os.* bits; target=wasi hangs?
+    # "golang/geo" -- s2, r2 both need reflect.DeepEqual()
 ]
 
 base_dir = os.getcwd()
