@@ -196,9 +196,6 @@ repos = [
         'repo': 'google/hilbert'
     },
     {
-        'repo': 'google/hilbert'
-    },
-    {
         'repo': 'google/okay'
     },
 
