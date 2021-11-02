@@ -198,6 +198,42 @@ repos = [
     {
         'repo': 'google/okay'
     },
+    {
+        'repo':
+        'golang/text',
+        'subdirs': [
+            'encoding/charmap', 'encoding/japanese', 'encoding/korean',
+            'encoding/simplifiedchinese', 'encoding/traditionalchinese'
+        ]
+    },
+    {
+        'repo':
+        'golang/image',
+        'subdirs': [
+            'colornames',
+            'font',
+            'font/basicfont',
+            'font/plan9font',
+            'math/fixed',
+            'riff',
+            'webp',
+        ]
+    },
+    {
+        'repo': 'golang/geo',
+        'subdirs': [
+            'r1',
+            'r3',
+            's1',
+        ],
+    },
+    {
+        'repo': 'golang/groupcache',
+        'subdirs': [
+            'consistenthash',
+            'lru',
+        ],
+    },
 
     # "dgryski/go-stablepart" -- requires reflect.DeepEqual() and testing/quick
     # "dgrysk/go-mavleg" -- requires reflect.DeepEqual
@@ -215,6 +251,7 @@ repos = [
     # "dgryski/go-topk" -- requires encoding/gob
     # "dgryski/tsip/go" -- requires supporting cd'ing inside a repo
     # "google/btree" -- needs reflect.DeepEqual
+    # "golang/snappy" -- needs patching out os.* bits; target=wasi hangs?
 ]
 
 base_dir = os.getcwd()
