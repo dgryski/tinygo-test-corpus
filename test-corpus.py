@@ -8,7 +8,8 @@ repos = [
         'repo': 'dgryski/go-arc'
     },
     {
-        'repo': 'dgryski/go-bloomindex'
+        'repo': 'dgryski/go-bloomindex',
+        'tags': 'purego noasm',
     },
     {
         'repo': 'dgryski/go-camellia'
@@ -17,7 +18,8 @@ repos = [
         'repo': 'dgryski/go-change'
     },
     {
-        'repo': 'dgryski/go-chaskey'
+        'repo': 'dgryski/go-chaskey',
+        'tags': 'purego noasm',
     },
     {
         'repo': 'dgryski/go-clefia'
@@ -38,7 +40,8 @@ repos = [
         'repo': 'dgryski/go-factor'
     },
     {
-        'repo': 'dgryski/go-farm'
+        'repo': 'dgryski/go-farm',
+        'tags': 'purego noasm',
     },
     {
         'repo': 'dgryski/go-fuzzstr'
@@ -81,13 +84,15 @@ repos = [
         'repo': 'dgryski/go-md5crypt'
     },
     {
-        'repo': 'dgryski/go-metro'
+        'repo': 'dgryski/go-metro',
+        'tags': 'purego noasm',
     },
     {
         'repo': 'dgryski/go-misty1'
     },
     {
-        'repo': 'dgryski/go-mph'
+        'repo': 'dgryski/go-mph',
+        'tags': 'purego noasm',
     },
     {
         'repo': 'dgryski/go-neeva'
@@ -123,7 +128,8 @@ repos = [
         'repo': 'dgryski/go-sequitur'
     },
     {
-        'repo': 'dgryski/go-sip13'
+        'repo': 'dgryski/go-sip13',
+        'tags': 'purego noasm',
     },
     {
         'repo': 'dgryski/go-skinny'
@@ -173,7 +179,8 @@ repos = [
         ]
     },
     {
-        'repo': 'jedisct1/go-minisign'
+        'repo': 'jedisct1/go-minisign',
+        'tags': 'purego noasm',
     },
     {
         'repo': 'jedisct1/xsecretbox',
