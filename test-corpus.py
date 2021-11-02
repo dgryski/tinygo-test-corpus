@@ -256,6 +256,7 @@ repos = [
     # "google/btree" -- needs reflect.DeepEqual
     # "golang/snappy" -- needs patching out os.* bits; target=wasi hangs?
     # "golang/geo" -- s2, r2 both need reflect.DeepEqual()
+    # "cloudflare/ahocorasick" -- interp timeout building regexps in test
 ]
 
 base_dir = os.getcwd()
