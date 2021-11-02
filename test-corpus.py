@@ -198,6 +198,7 @@ repos = [
     # "dgryski/go-ddmin" -- requires testing/quick
     # "dgryski/go-topk" -- requires encoding/gob
     # "dgryski/tsip/go" -- requires supporting cd'ing inside a repo
+    # "google/btree" -- needs reflect.DeepEqual
 ]
 
 base_dir = os.getcwd()
