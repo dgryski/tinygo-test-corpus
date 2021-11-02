@@ -179,6 +179,9 @@ repos = [
         'repo': 'jedisct1/xsecretbox',
         'tags': 'purego noasm'
     },
+    {
+        'repo': 'google/shlex'
+    },
 
     # "dgryski/go-stablepart" -- requires reflect.DeepEqual() and testing/quick
     # "dgrysk/go-mavleg" -- requires reflect.DeepEqual
