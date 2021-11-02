@@ -165,6 +165,9 @@ repos = [
         'repo': 'dgryski/go-xoshiro'
     },
     {
+        'repo': 'dgryski/go-zlatlong'
+    },
+    {
         'repo':
         'golang/crypto',
         'tags':
