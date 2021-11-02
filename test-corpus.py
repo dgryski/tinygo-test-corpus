@@ -182,6 +182,18 @@ repos = [
     {
         'repo': 'google/shlex'
     },
+    {
+        'repo': 'google/boundedwait'
+    },
+    {
+        'repo': 'google/hilbert'
+    },
+    {
+        'repo': 'google/hilbert'
+    },
+    {
+        'repo': 'google/okay'
+    },
 
     # "dgryski/go-stablepart" -- requires reflect.DeepEqual() and testing/quick
     # "dgrysk/go-mavleg" -- requires reflect.DeepEqual
