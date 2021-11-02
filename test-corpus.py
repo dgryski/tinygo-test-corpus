@@ -251,8 +251,8 @@ def main():
         os.chdir(repo_base)
 
         if not os.path.isfile("go.mod"):
-            print("creating running `go mod init")
-            os.system("go mod init github.com/%s" % repo)
+            print("creating go.mod: running `go mod init")
+            os.system("go mod init github.com/%s" % repo['repo'])
             os.system("go get -t .")
 
         tags = ""
