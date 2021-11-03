@@ -280,6 +280,7 @@ def clone_or_update_repo(repo):
 
 
 def main():
+    os.system("tinygo clean")
     if not os.path.isdir(corpus_dir):
         os.makedirs(corpus_dir)
 
