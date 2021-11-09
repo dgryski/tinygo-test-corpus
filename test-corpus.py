@@ -28,7 +28,11 @@ repos = [
         'repo': 'dgryski/go-clockpro'
     },
     {
-        'repo': 'dgryski/go-cuckoof'
+        'repo': 'dgryski/go-cobs'
+    },
+    {
+        'repo': 'dgryski/go-cuckoof',
+        'tags': 'pureno noasm',
     },
     {
         'repo': 'dgryski/go-discreterand'
@@ -77,6 +81,10 @@ repos = [
         'repo': 'dgryski/go-linlog'
     },
     {
+        'repo': 'dgryski/go-maglev',
+        'tags': 'appengine',  # for dchest/siphash
+    },
+    {
         'repo': 'dgryski/go-marvin32',
         'tags': 'purego'
     },
@@ -99,6 +107,9 @@ repos = [
     },
     {
         'repo': 'dgryski/go-nibz'
+    },
+    {
+        'repo': 'dgryski/go-nibblesort'
     },
     {
         'repo': 'dgryski/go-pcgr'
@@ -156,6 +167,9 @@ repos = [
         'repo': 'dgryski/go-tinymap'
     },
     {
+        'repo': "dgryski/go-trigram",
+    },
+    {
         'repo': 'dgryski/go-twine'
     },
     {
@@ -196,6 +210,14 @@ repos = [
         'repo': 'google/boundedwait'
     },
     {
+        'repo': 'dgryski/go-maglev',
+        'tags': 'appengine',  # for dchest/siphash
+    },
+    {
+        'repo': 'google/der-ascii',
+        'subdirs': ['cmd/ascii2der', 'cmd/der2ascii', 'internal'],
+    },
+    {
         'repo': 'google/hilbert'
     },
     {
@@ -205,8 +227,15 @@ repos = [
         'repo':
         'golang/text',
         'subdirs': [
-            'encoding/charmap', 'encoding/japanese', 'encoding/korean',
-            'encoding/simplifiedchinese', 'encoding/traditionalchinese'
+            'encoding/charmap',
+            'encoding/japanese',
+            'encoding/korean',
+            'encoding/simplifiedchinese',
+            'encoding/traditionalchinese',
+            'unicode/rangetable',
+            "internal/ucd",
+            "internal/tag",
+            # internal/stringset -- fails due to sort.Search()?
         ]
     },
     {
@@ -214,6 +243,7 @@ repos = [
         'golang/image',
         'subdirs': [
             'colornames',
+            'draw',
             'font',
             'font/basicfont',
             'font/plan9font',
@@ -226,8 +256,10 @@ repos = [
         'repo': 'golang/geo',
         'subdirs': [
             'r1',
+            'r2',
             'r3',
             's1',
+            #  's2', -- fails
         ],
     },
     {
@@ -237,26 +269,21 @@ repos = [
             'lru',
         ],
     },
-
     # "dgryski/go-stablepart" -- requires reflect.DeepEqual() and testing/quick
-    # "dgrysk/go-mavleg" -- requires reflect.DeepEqual
     # "dgryski/go-cobs", -- requires testing/quick
     # "dgryski/go-gramgen" -- requires building and running code and comparing output
     # "dgryski/go-kll", -- requires encoding/gob
     # "dgryski/go-mpchash", -- compat tests require siphash
-    # "dgryski/go-nibblesort" -- requires testing/quick
-    # "dgryski/go-postings" -- requires reflect.DeepEqual()
+    # "dgryski/go-postings" -- segfault in compressed iterator + noasm
     # "dgryski/go-qselect" -- requires testing/quick
-    # "dgryski/go-speck" -- requires reflect.DeepEqual()
-    # "dgryski/go-trigram" -- requires reflect.DeepEqual()
     # "dgryski/go-simstore", -- requires testing/quick but can be moved to tinyfuzz with PR
     # "dgryski/go-ddmin" -- requires testing/quick
     # "dgryski/go-topk" -- requires encoding/gob
-    # "dgryski/tsip/go" -- requires supporting cd'ing inside a repo
-    # "google/btree" -- needs reflect.DeepEqual
     # "golang/snappy" -- needs patching out os.* bits; target=wasi hangs?
-    # "golang/geo" -- s2, r2 both need reflect.DeepEqual()
+    # "google/btree" -- panic: reflect: call of reflect.Value.Elem on invalid type
+    # "google/intervals" -- panic: (reflect.Value).Interface: unexported
     # "cloudflare/ahocorasick" -- interp timeout building regexps in test
+    # "google/open-location-code/go" -- alloc link error
 ]
 
 base_dir = os.getcwd()
