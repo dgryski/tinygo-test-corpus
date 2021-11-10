@@ -118,6 +118,9 @@ repos = [
         'repo': 'dgryski/go-present'
     },
     {
+        'repo': 'dgryski/go-postings'
+    },
+    {
         'repo': 'dgryski/go-quicklz'
     },
     {
@@ -274,7 +277,6 @@ repos = [
     # "dgryski/go-gramgen" -- requires building and running code and comparing output
     # "dgryski/go-kll", -- requires encoding/gob
     # "dgryski/go-mpchash", -- compat tests require siphash
-    # "dgryski/go-postings" -- segfault in compressed iterator + noasm
     # "dgryski/go-qselect" -- requires testing/quick
     # "dgryski/go-simstore", -- requires testing/quick but can be moved to tinyfuzz with PR
     # "dgryski/go-ddmin" -- requires testing/quick
