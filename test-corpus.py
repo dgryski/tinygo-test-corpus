@@ -190,12 +190,37 @@ repos = [
         'tags':
         'purego noasm',
         'subdirs': [
-            'argon2', 'bcrypt', 'blake2b', 'blake2s', 'blowfish', 'bn256',
-            'cast5', 'chacha20poly1305', 'curve25519', 'ed25519', 'hkdf',
-            'internal/subtle', 'md4', 'nacl/box', 'nacl/secretbox',
-            'nacl/sign', 'openpgp/armor', 'openpgp/elgamal', 'openpgp/s2k',
-            'pbkdf2', 'pkcs12/internal/rc2', 'ripemd160', 'salsa20', 'scrypt',
-            'tea', 'twofish', 'xtea'
+            'argon2',
+            'bcrypt',
+            'blake2b',
+            'blake2s',
+            'blowfish',
+            'bn256',
+            'cast5',
+            'chacha20poly1305',
+            'curve25519',
+            'ed25519',
+            'hkdf',
+            'internal/subtle',
+            'md4',
+            'nacl/auth',
+            'nacl/box',
+            'nacl/secretbox',
+            'nacl/sign',
+            'openpgp/armor',
+            'openpgp/elgamal',
+            'openpgp/s2k',
+            'pbkdf2',
+            'pkcs12/internal/rc2',
+            'ripemd160',
+            'salsa20',
+            'scrypt',
+            'tea',
+            'twofish',
+            'xtea',
+            # chacha20 -- panic: chacha20: SetCounter attempted to rollback counter
+            # cryptobyte -- panic: unimplemented: reflect.OverflowInt()
+            # salsa20/salsa -- panic: runtime error: index out of range
         ]
     },
     {
@@ -246,23 +271,26 @@ repos = [
         'golang/image',
         'subdirs': [
             'colornames',
+            # 'ccitt', -- fails, "panic: runtime error: index out of range"
             'draw',
             'font',
             'font/basicfont',
             'font/plan9font',
             'math/fixed',
             'riff',
+            # 'tiff', -- fails "panic: runtime error: nil pointer dereference"
             'webp',
         ]
     },
     {
-        'repo': 'golang/geo',
+        'repo':
+        'golang/geo',
         'subdirs': [
             'r1',
             'r2',
             'r3',
             's1',
-            #  's2', -- fails
+            #  's2', -- fails, possibly due to sort.Search() bug
         ],
     },
     {
