@@ -275,7 +275,7 @@ repos = [
         'golang/image',
         'subdirs': [
             'colornames',
-            # 'ccitt', -- fails, "panic: runtime error: index out of range"
+            'ccitt',
             'draw',
             'font',
             'font/basicfont',
