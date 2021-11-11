@@ -118,9 +118,6 @@ repos = [
         'repo': 'dgryski/go-present'
     },
     {
-        'repo': 'dgryski/go-postings'
-    },
-    {
         'repo': 'dgryski/go-quicklz'
     },
     {
@@ -317,6 +314,7 @@ repos = [
     # "google/btree" -- panic: reflect: call of reflect.Value.Elem on invalid type
     # "cloudflare/ahocorasick" -- interp timeout building regexps in test
     # "google/open-location-code/go" -- alloc link error
+    # "dgryski/go-postings" -- nil map in AddDocument causes segfault
 ]
 
 base_dir = os.getcwd()
