@@ -200,7 +200,7 @@ repos = [
             'hkdf',
             'internal/subtle',
             'md4',
-            'nacl/auth',
+            # 'nacl/auth', -- fails when -short is passed because t.Skip() isn't implemented
             'nacl/box',
             'nacl/secretbox',
             'nacl/sign',
@@ -212,6 +212,7 @@ repos = [
             'ripemd160',
             'salsa20',
             'scrypt',
+            'ssh/internal/bcrypt_pbkdf',
             'tea',
             'twofish',
             'xtea',
@@ -271,17 +272,20 @@ repos = [
         'repo':
         'golang/image',
         'subdirs': [
-            'colornames',
             'ccitt',
+            'colornames',
             'draw',
             'font',
             'font/basicfont',
+            'font/opentype',
             'font/plan9font',
             'math/fixed',
             'riff',
             # 'tiff', -- fails "panic: runtime error: nil pointer dereference"
             'webp',
-        ]
+        ],
+        'tags':
+        'noasm',
     },
     {
         'repo':
