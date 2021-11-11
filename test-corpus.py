@@ -249,6 +249,10 @@ repos = [
         'repo': 'google/hilbert'
     },
     {
+        'repo': 'google/go-intervals',
+        'subdirs': ['intervalset', 'timespanset'],
+    },
+    {
         'repo': 'google/okay'
     },
     {
@@ -311,7 +315,6 @@ repos = [
     # "dgryski/go-topk" -- requires encoding/gob
     # "golang/snappy" -- needs patching out os.* bits; target=wasi hangs?
     # "google/btree" -- panic: reflect: call of reflect.Value.Elem on invalid type
-    # "google/intervals" -- panic: (reflect.Value).Interface: unexported
     # "cloudflare/ahocorasick" -- interp timeout building regexps in test
     # "google/open-location-code/go" -- alloc link error
 ]
