@@ -200,7 +200,7 @@ repos = [
             'hkdf',
             'internal/subtle',
             'md4',
-            # 'nacl/auth', -- fails when -short is passed because t.Skip() isn't implemented
+            'nacl/auth',
             'nacl/box',
             'nacl/secretbox',
             'nacl/sign',
