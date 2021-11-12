@@ -368,7 +368,7 @@ def main():
         if 'tags' in repo:
             tags = "-tags='%s'" % repo['tags']
 
-        for cmd in ["go test -v", "tinygo test -v -short %s" % tags]:
+        for cmd in ["go test -v", "tinygo test -v %s" % tags]:
             dirs = ["."]
             if 'subdirs' in repo:
                 dirs = repo['subdirs']
