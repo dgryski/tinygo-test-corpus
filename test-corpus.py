@@ -222,14 +222,6 @@ repos = [
         ]
     },
     {
-        'repo': 'jedisct1/go-minisign',
-        'tags': 'purego noasm',
-    },
-    {
-        'repo': 'jedisct1/xsecretbox',
-        'tags': 'purego noasm'
-    },
-    {
         'repo': 'google/shlex'
     },
     {
