@@ -257,14 +257,21 @@ repos = [
         'repo':
         'golang/text',
         'subdirs': [
+            'encoding',
             'encoding/charmap',
+            'encoding/htmlindex',
+            'encoding/ianaindex',
             'encoding/japanese',
             'encoding/korean',
             'encoding/simplifiedchinese',
             'encoding/traditionalchinese',
-            'unicode/rangetable',
+            'encoding/unicode',
+            'encoding/utf32',
+            'internal/format',
             "internal/ucd",
             "internal/tag",
+            'search',
+            'unicode/rangetable',
             # internal/stringset -- fails due to sort.Search()?
         ]
     },
