@@ -232,6 +232,9 @@ repos = [
         'tags': 'appengine',  # for dchest/siphash
     },
     {
+        'repo': 'google/btree',
+    },
+    {
         'repo': 'google/der-ascii',
         'subdirs': ['cmd/ascii2der', 'cmd/der2ascii', 'internal'],
     },
@@ -314,7 +317,6 @@ repos = [
     # "dgryski/go-ddmin" -- requires testing/quick
     # "dgryski/go-topk" -- requires encoding/gob
     # "golang/snappy" -- needs patching out os.* bits; target=wasi hangs?
-    # "google/btree" -- panic: reflect: call of reflect.Value.Elem on invalid type
     # "cloudflare/ahocorasick" -- interp timeout building regexps in test
     # "google/open-location-code/go" -- alloc link error
     # "dgryski/go-postings" -- nil map in AddDocument causes segfault
