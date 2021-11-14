@@ -103,6 +103,10 @@ repos = [
         'tags': 'purego noasm',
     },
     {
+        'repo': 'dgryski/go-mpchash',
+        'tags': 'appengine',  # for dchest/siphash
+    },
+    {
         'repo': 'dgryski/go-neeva'
     },
     {
@@ -311,7 +315,6 @@ repos = [
     # "dgryski/go-cobs", -- requires testing/quick
     # "dgryski/go-gramgen" -- requires building and running code and comparing output
     # "dgryski/go-kll", -- requires encoding/gob
-    # "dgryski/go-mpchash", -- compat tests require siphash
     # "dgryski/go-qselect" -- requires testing/quick
     # "dgryski/go-simstore", -- requires testing/quick but can be moved to tinyfuzz with PR
     # "dgryski/go-ddmin" -- requires testing/quick
