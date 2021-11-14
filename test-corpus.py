@@ -320,6 +320,10 @@ repos = [
     {
         'repo': 'VividCortex/gohistogram',
     },
+    {
+        'repo': 'cespare/xxhash',
+        'tags': 'appengine',
+    },
     # "dgryski/go-stablepart" -- requires reflect.DeepEqual() and testing/quick
     # "dgryski/go-cobs", -- requires testing/quick
     # "dgryski/go-gramgen" -- requires building and running code and comparing output
