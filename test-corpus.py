@@ -324,6 +324,64 @@ repos = [
         'repo': 'cespare/xxhash',
         'tags': 'appengine',
     },
+    {
+        'repo': 'gonum/gonum',
+        'tags': 'noasm'
+    },
+    {
+        'repo': 'gonum/gonum',
+        'tags': 'noasm',
+        'subdirs': [
+            'blas/blas32',
+            # 'blas/blas64', -- TestDasum panic: blas: n < 0
+            'blas/cblas64',
+            'blas/cblas128',
+            # 'blas/gonum', -- panic: blas: n < 0
+            # 'cmplxs', -- TestAdd panic: cmplxs: slice lengths do not match
+            'cmplxs/cscalar',
+            # 'diff/fd' -- panic: fd: slice length mismatch
+            # 'dsp/fourier' -- panic: unimplemented: reflect.DeepEqual()
+            'dsp/window',
+            # 'floats', -- panic: floats: destination slice length does not match input
+            'floats/scalar',
+            # 'graph' ld.lld-11:  -- error: undefined symbol: reflect.mapiterkey (among other reflect errors)
+            # 'graph/topo' -- Reflect: Same as above
+            'integrate',
+            'integrate/quad',
+            'internal/cmplx64',
+            # 'internal/math32' -- /usr/local/go/src/testing/quick/quick.go:273:11: fType.NumOut undefined (type reflect.Type has no field or method NumOut)
+            'internal/testrand',
+            # 'interp', -- panic: interp: input slices have different lengths
+            'lapack/gonum',
+            # 'mat', -- panic: unimplemented: reflect.DeepEqual()
+            'mathext',
+            'mathext/prng',
+            # 'num/dual' -- TestFormat unexpected result for fmt.Sprintf("%#v", T{Real:1.1, Emag:2.1}): got:"T{Real:1.1, Emag:2.1}", want:"dual.Number{Real:1.1, Emag:2.1}"    unexpected result for fmt.Sprintf("%#v", T{Real:-1.1, Emag:-2.1}): got:"T{Real:-1.1, Emag:-2.1}", want:"dual.Number{Real:-1.1, Emag:-2.1}"
+            # 'num/dualcmplx' -- TestFormat (similar to above)
+            # 'num/dualquat' -- TestFormat (similar to above)
+            # 'num/hyperdual' -- TestFormat (similar to above)
+            # 'num/quat' -- TestFormat (similar to above)
+            # 'optimize' // ld.lld-11: error: undefined symbol: golang.org/x/tools/container/intsets.havePOPCNT error: failed to link ...
+            'optimize/convex/lp',
+            'optimize/functions',
+            # 'spatial/barneshut', -- panic: unimplemented: reflect.DeepEqual()
+            # 'spatial/kdtree', -- panic: unimplemented: reflect.DeepEqual()
+            'spatial/r2',
+            'spatial/r3',
+            # 'spatial/vptree', -- panic: unimplemented: reflect.DeepEqual()
+            # 'stat', -- panic: stat: slice length mismatch
+            # 'stat/card' -- /usr/local/go/src/encoding/gob/decode.go:562:21: MakeMapWithSize not declared by package reflect
+            # 'stat/combin' -- panic: unimplemented: reflect.DeepEqual()
+            'stat/distmat',
+            # 'stat/distmv', -- ld.lld-11: error: undefined symbol: golang.org/x/tools/container/intsets.havePOPCNT error: failed to link ...
+            # 'stat/distuv' -- panic: distuv: cannot compute Mode for Beta != 0\
+            'stat/mds',
+            # 'stat/samplemv', -- ld.lld-11: error: undefined symbol: golang.org/x/tools/container/intsets.havePOPCNT error: failed to link ...
+            # 'stat/sampleuv', -- panic: unimplemented: reflect.DeepEqual()
+            'stat/spatial',
+            # 'unit' -- All Format tests fail. Similar to `num` subpackages.
+        ],
+    },
     # "dgryski/go-stablepart" -- requires reflect.DeepEqual() and testing/quick
     # "dgryski/go-cobs", -- requires testing/quick
     # "dgryski/go-gramgen" -- requires building and running code and comparing output
