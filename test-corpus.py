@@ -340,7 +340,7 @@ repos = [
             # 'cmplxs', -- TestAdd panic: cmplxs: slice lengths do not match
             'cmplxs/cscalar',
             # 'diff/fd' -- panic: fd: slice length mismatch
-            # 'dsp/fourier' -- panic: unimplemented: reflect.DeepEqual()
+            'dsp/fourier',
             'dsp/window',
             # 'floats', -- panic: floats: destination slice length does not match input
             'floats/scalar',
@@ -353,7 +353,7 @@ repos = [
             'internal/testrand',
             # 'interp', -- panic: interp: input slices have different lengths
             'lapack/gonum',
-            # 'mat', -- panic: unimplemented: reflect.DeepEqual()
+            # 'mat', -- panic: mat: row index out of range
             'mathext',
             'mathext/prng',
             # 'num/dual' -- TestFormat unexpected result for fmt.Sprintf("%#v", T{Real:1.1, Emag:2.1}): got:"T{Real:1.1, Emag:2.1}", want:"dual.Number{Real:1.1, Emag:2.1}"    unexpected result for fmt.Sprintf("%#v", T{Real:-1.1, Emag:-2.1}): got:"T{Real:-1.1, Emag:-2.1}", want:"dual.Number{Real:-1.1, Emag:-2.1}"
@@ -364,20 +364,20 @@ repos = [
             # 'optimize' // ld.lld-11: error: undefined symbol: golang.org/x/tools/container/intsets.havePOPCNT error: failed to link ...
             'optimize/convex/lp',
             'optimize/functions',
-            # 'spatial/barneshut', -- panic: unimplemented: reflect.DeepEqual()
-            # 'spatial/kdtree', -- panic: unimplemented: reflect.DeepEqual()
+            # 'spatial/barneshut', # -- panic: unimplemented: (reflect.Value).MapKeys()
+            # 'spatial/kdtree', # -- panic: unimplemented: (reflect.Value).MapKeys()
             'spatial/r2',
             'spatial/r3',
-            # 'spatial/vptree', -- panic: unimplemented: reflect.DeepEqual()
+            # 'spatial/vptree', # -- panic: unimplemented: (reflect.Value).MapKeys()
             # 'stat', -- panic: stat: slice length mismatch
             # 'stat/card' -- /usr/local/go/src/encoding/gob/decode.go:562:21: MakeMapWithSize not declared by package reflect
-            # 'stat/combin' -- panic: unimplemented: reflect.DeepEqual()
+            'stat/combin',
             'stat/distmat',
             # 'stat/distmv', -- ld.lld-11: error: undefined symbol: golang.org/x/tools/container/intsets.havePOPCNT error: failed to link ...
             # 'stat/distuv' -- panic: distuv: cannot compute Mode for Beta != 0\
             'stat/mds',
             # 'stat/samplemv', -- ld.lld-11: error: undefined symbol: golang.org/x/tools/container/intsets.havePOPCNT error: failed to link ...
-            # 'stat/sampleuv', -- panic: unimplemented: reflect.DeepEqual()
+            # 'stat/sampleuv', # -- TestWeightedTimeSeeded requires t.Skip(), otherwise passes
             'stat/spatial',
             # 'unit' -- All Format tests fail. Similar to `num` subpackages.
         ],
