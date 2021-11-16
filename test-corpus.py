@@ -265,7 +265,7 @@ repos = [
             'encoding/simplifiedchinese',
             'encoding/traditionalchinese',
             'encoding/unicode',
-            'encoding/utf32',
+            'encoding/unicode/utf32',
             'internal/format',
             "internal/ucd",
             "internal/tag",
