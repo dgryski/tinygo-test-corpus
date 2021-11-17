@@ -446,7 +446,7 @@ def main():
             for subdir in dirs:
                 if subdir != ".":
                     os.chdir(subdir)
-                print("running `%s`" % cmd)
+                print("running `%s` for %s" % (cmd, subdir))
                 r = os.system(cmd)
                 if r:
                     print("`%s` failed" % cmd)
