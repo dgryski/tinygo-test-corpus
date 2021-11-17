@@ -272,7 +272,7 @@ repos = [
             "internal/tag",
             'search',
             'unicode/rangetable',
-            # internal/stringset -- fails due to sort.Search()?
+            'internal/stringset',
         ]
     },
     {
