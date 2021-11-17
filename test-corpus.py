@@ -2,6 +2,7 @@
 
 import os
 import sys
+import time
 
 repos = [
     {
@@ -417,6 +418,7 @@ def clone_or_update_repo(repo):
 
 
 def main():
+    t0 = time.time()
     os.system("tinygo clean")
     if not os.path.isdir(corpus_dir):
         os.makedirs(corpus_dir)
@@ -451,6 +453,7 @@ def main():
                     sys.exit(1)
                 if subdir != ".":
                     os.chdir(repo_base)
+    print("total time: ", int(time.time() - t0), "seconds")
 
 
 if __name__ == "__main__":
