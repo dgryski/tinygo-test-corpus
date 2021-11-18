@@ -302,7 +302,7 @@ repos = [
             'r2',
             'r3',
             's1',
-            #  's2', -- fails, possibly due to sort.Search() bug
+            #  's2', -- issue with structs as map keys?
         ],
     },
     {
