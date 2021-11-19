@@ -288,7 +288,7 @@ repos = [
             'font/plan9font',
             'math/fixed',
             'riff',
-            # 'tiff', -- fails "panic: runtime error: nil pointer dereference"
+            # 'tiff', -- fails because os.File.ReadAt is not implemented
             'webp',
         ],
         'tags':
