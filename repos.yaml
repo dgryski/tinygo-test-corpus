@@ -27,7 +27,7 @@
 - repo: dgryski/go-linebreak
 - repo: dgryski/go-linlog
 - repo: dgryski/go-maglev
-  tags: appengine
+  tags: appengine # for dchest/siphash
 - repo: dgryski/go-marvin32
   tags: purego
 - repo: dgryski/go-md5crypt
@@ -37,7 +37,7 @@
 - repo: dgryski/go-mph
   tags: purego noasm
 - repo: dgryski/go-mpchash
-  tags: appengine
+  tags: appengine # for dchest/siphash
 - repo: dgryski/go-neeva
 - repo: dgryski/go-nibz
 - repo: dgryski/go-nibblesort
@@ -97,10 +97,12 @@
   - tea
   - twofish
   - xtea
+    # chacha20 -- panic: chacha20: SetCounter attempted to rollback counter
+    # cryptobyte -- panic: unimplemented: reflect.OverflowInt()
+    # salsa20/salsa -- panic: runtime error: index out of range
+    # sha3 -- panic: unimplemented: (reflect.Type).NumMethod()
 - repo: google/shlex
 - repo: google/boundedwait
-- repo: dgryski/go-maglev
-  tags: appengine
 - repo: google/btree
 - repo: google/der-ascii
   subdirs:
@@ -130,6 +132,12 @@
   - internal/tag
   - search
   - unicode/rangetable
+    # 'collate/build', # -- panic: (reflect.Value).Interface: unexported
+    # 'feature/plural', # TestSelect, TestOrdinal, TestCardinal fail
+    # 'internal/catmsg', # TestCodec fails
+    # 'internal/gen/bitfield', # panic: unimplemented: (reflect.Type).Name()
+    # 'message/catalog', # panic: runtime error: type assert failed
+    # 'number', # fails due to printf %T formatting
 - repo: golang/image
   tags: noasm
   subdirs:
@@ -143,12 +151,14 @@
   - math/fixed
   - riff
   - webp
+    # 'tiff', -- fails because os.File.ReadAt is not implemented
 - repo: golang/geo
   subdirs:
   - r1
   - r2
   - r3
   - s1
+    #  's2', -- issue with structs as map keys?
 - repo: golang/groupcache
   subdirs:
   - consistenthash
@@ -183,4 +193,33 @@
   - stat/distmat
   - stat/mds
   - stat/spatial
+            # 'blas/blas64', # -- TestDasum panic: blas: n < 0
+            # 'blas/gonum', # -- panic: blas: n < 0
+            # 'cmplxs', # -- TestAdd panic: cmplxs: slice lengths do not match
+            # 'diff/fd', # -- panic: fd: slice length mismatch
+            # 'floats', # -- panic: floats: destination slice length does not match input
+            # 'graph', # ld.lld-11:  -- error: undefined symbol: reflect.mapiterkey (among other reflect errors)
+            # 'graph/topo', # -- Reflect: Same as above
+            # 'internal/math32', # -- /usr/local/go/src/testing/quick/quick.go:273:11: fType.NumOut undefined (type reflect.Type has no field or method NumOut)
+            # 'interp', # -- panic: interp: input slices have different lengths
+            # 'mat', # -- panic: mat: row index out of range
+            # 'num/dual', # -- TestFormat unexpected result for fmt.Sprintf("%#v", T{Real:1.1, Emag:2.1}): got:"T{Real:1.1, Emag:2.1}", want:"dual.Number{Real:1.1, Emag:2.1}"    unexpected result for fmt.Sprintf("%#v", T{Real:-1.1, Emag:-2.1}): got:"T{Real:-1.1, Emag:-2.1}", want:"dual.Number{Real:-1.1, Emag:-2.1}"
+            # 'num/dualcmplx', # -- TestFormat (similar to above)
+            # 'num/dualquat', # -- TestFormat (similar to above)
+            # 'num/hyperdual', # -- TestFormat (similar to above)
+            # 'num/quat', # -- TestFormat (similar to above)
+            # 'optimize', # // ld.lld-11: error: undefined symbol: golang.org/x/tools/container/intsets.havePOPCNT error: failed to link ...
+            # 'spatial/barneshut', # -- panic: unimplemented: (reflect.Value).MapKeys()
+            # 'spatial/kdtree', # -- panic: unimplemented: (reflect.Value).MapKeys()
+            # 'spatial/vptree', # -- panic: unimplemented: (reflect.Value).MapKeys()
+            # 'stat', # -- panic: stat: slice length mismatch
+            # 'stat/card', # -- /usr/local/go/src/encoding/gob/decode.go:562:21: MakeMapWithSize not declared by package reflect
+            # 'stat/distmv', # -- ld.lld-11: error: undefined symbol: golang.org/x/tools/container/intsets.havePOPCNT error: failed to link ...
+            # 'stat/distuv', # -- panic: distuv: cannot compute Mode for Beta != 0\
+            # 'stat/samplemv', -- ld.lld-11: error: undefined symbol: golang.org/x/tools/container/intsets.havePOPCNT error: failed to link ...
+            # 'stat/sampleuv', # -- TestWeightedTimeSeeded requires t.Skip(), otherwise passes
+            # 'unit', # -- All Format tests fail. Similar to `num` subpackages.
 
+# "cloudflare/ahocorasick" -- interp timeout building regexps in test
+# "google/open-location-code/go" -- alloc link error
+# "dgryski/go-postings" -- nil map in AddDocument causes segfault
