@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 
 	"gopkg.in/yaml.v2"
 )
@@ -41,7 +42,9 @@ func main() {
 		log.Fatal("getting current dir:", err)
 	}
 	corpusDir := filepath.Join(baseDir, corpusFolderName)
-	mustrun(*compiler, "clean")
+	if strings.HasSuffix(*compiler, "tinygo") {
+		mustrun(*compiler, "clean")
+	}
 	if err != nil {
 		log.Fatal("calling `%v clean`:", *compiler, err)
 	}
