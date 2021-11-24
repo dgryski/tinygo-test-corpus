@@ -41,12 +41,13 @@ func main() {
 	if err != nil {
 		log.Fatal("getting current dir:", err)
 	}
+
 	corpusDir := filepath.Join(baseDir, corpusFolderName)
 	if strings.HasSuffix(*compiler, "tinygo") {
 		mustrun(*compiler, "clean")
 	}
 	if err != nil {
-		log.Fatal("calling `%v clean`:", *compiler, err)
+		log.Fatalf("calling `%v clean`: %s", *compiler, err)
 	}
 	os.Mkdir(corpusDir, dirMode) // force directory creation if not exist.
 	_, err = os.ReadDir(corpusDir)
@@ -54,21 +55,23 @@ func main() {
 		log.Fatal("reading corpus directory: ", err)
 	}
 
-	// Commence testing logic.
-	for _, repo := range repos {
-		os.Chdir(corpusDir)
-		cloneOrUpdateRepo(repo.Repo)
+	// Commence testing logic. Start from latest repo additions (end of repos).
+	oos := newCommander()
+	for i := len(repos) - 1; i >= 0; i-- {
+		repo := repos[i]
+		oos.Chdir(corpusDir)
+		oos.cloneOrUpdateRepo(repo.Repo)
 		repoBase := filepath.Join(corpusDir, repo.Repo)
-		os.Chdir(repoBase)
+		oos.Chdir(repoBase)
 
-		if _, err := os.Stat("go.mod"); err != nil {
+		if _, err := oos.Stat("go.mod"); err != nil {
 			log.Printf("creating %s/go.mod: running `go mod init`\n", repoBase)
-			mustrun("go", "mod", "init", fmt.Sprintf("%s/%s", host, repo.Repo))
-			mustrun("go", "get", "-t", ".")
+			oos.run(false, "go", "mod", "init", fmt.Sprintf("%s/%s", host, repo.Repo))
+			oos.run(false, "go", "get", "-t", ".")
 		}
 		tags := ""
 		if repo.Tags != "" {
-			tags = fmt.Sprintf("%s", repo.Tags)
+			tags = repo.Tags
 		}
 		dirs := []string{"."}
 		if len(repo.Subdirs) > 0 {
@@ -77,38 +80,16 @@ func main() {
 
 		for _, subdir := range dirs {
 			if subdir != "." {
-				os.Chdir(subdir)
+				oos.Chdir(subdir)
 			}
-			out1 := mustrun(*compiler, "test", "-v", "-tags="+tags)
-			countSubdir++
-			log.Printf("package %s:\n%s\n", filepath.Join(repo.Repo, subdir), out1)
+			oos.run(true, *compiler, "test", "-v", "-tags="+tags)
 			if subdir != "." {
-				os.Chdir(repoBase)
+				oos.Chdir(repoBase)
 			}
 		}
 		countRepo++
 		log.Printf("finished module %d/%d %s", countRepo, len(repos), repo.Repo)
 	}
-}
-
-func cloneOrUpdateRepo(repo string) {
-	if _, err := os.Stat(repo); err != nil {
-		// Repo does not exist.
-		log.Printf("repo not found. cloning %s", repo)
-		d := filepath.Dir(repo)
-		if _, err := os.Stat(repo); err != nil {
-			log.Printf("creating directory %s", d)
-			os.Mkdir(d, dirMode)
-		}
-		os.Chdir(d)
-		mustrun("git", "clone", fmt.Sprintf("%s/%s", hostURL, repo))
-		return
-	}
-
-	os.Chdir(repo)
-	log.Printf("repo exists, updating %s", repo)
-	mustrun("git", "fetch")
-	mustrun("git", "pull")
 }
 
 func mustrun(name string, arg ...string) (stdout string) {
