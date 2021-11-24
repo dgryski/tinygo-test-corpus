@@ -257,6 +257,7 @@ repos = [
         'repo':
         'golang/text',
         'subdirs': [
+            # 'collate/build', # -- panic: (reflect.Value).Interface: unexported
             'encoding',
             'encoding/charmap',
             'encoding/htmlindex',
@@ -267,12 +268,19 @@ repos = [
             'encoding/traditionalchinese',
             'encoding/unicode',
             'encoding/unicode/utf32',
+            # 'feature/plural', # TestSelect, TestOrdinal, TestCardinal fail
+            'internal',
+            # 'internal/catmsg', # TestCodec fails
             'internal/format',
-            "internal/ucd",
-            "internal/tag",
+            # 'internal/gen/bitfield', # panic: unimplemented: (reflect.Type).Name()
+            'internal/language/compact',
+            'internal/stringset',
+            'internal/tag',
+            'internal/ucd',
+            # 'message/catalog', # panic: runtime error: type assert failed
+            # 'number', # fails due to printf %T formatting
             'search',
             'unicode/rangetable',
-            'internal/stringset',
         ]
     },
     {
