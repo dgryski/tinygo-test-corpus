@@ -21,6 +21,8 @@ const (
 
 func main() {
 	configYaml := flag.String("config", "repos.yaml", "yaml of repositories to run")
+	compiler := flag.String("compiler", "tinygo", "use this go compiler")
+
 	flag.Parse()
 
 	repos, err := loadRepos(*configYaml)
@@ -39,9 +41,9 @@ func main() {
 		log.Fatal("getting current dir:", err)
 	}
 	corpusDir := filepath.Join(baseDir, corpusFolderName)
-	mustrun("tinygo", "clean")
+	mustrun(*compiler, "clean")
 	if err != nil {
-		log.Fatal("calling `tinygo clean`:", err)
+		log.Fatal("calling `%v clean`:", *compiler, err)
 	}
 	os.Mkdir(corpusDir, dirMode) // force directory creation if not exist.
 	_, err = os.ReadDir(corpusDir)
@@ -74,14 +76,9 @@ func main() {
 			if subdir != "." {
 				os.Chdir(subdir)
 			}
-			tinyout := make(chan string)
-			// Run TinyGo and Go in parallel.
-			go func() {
-				tinyout <- mustrun("tinygo", "test", "-v", "-tags", tags)
-			}()
-			out1 := mustrun("go", "test", "-v")
+			out1 := mustrun(*compiler, "test", "-v", "-tags="+tags)
 			countSubdir++
-			log.Printf("package %s:\n%s\n%s\n", filepath.Join(repo.Repo, subdir), out1, <-tinyout)
+			log.Printf("package %s:\n%s\n", filepath.Join(repo.Repo, subdir), out1)
 			if subdir != "." {
 				os.Chdir(repoBase)
 			}
