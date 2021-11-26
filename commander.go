@@ -8,33 +8,29 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"runtime"
-	"sync"
 )
 
 // commander keeps track of a directory and runs commands on them providing
-// a crude form of parallelism.
+// a crude form of parallelism. Not safe for concurrent use.
 type commander struct {
-	*sync.Mutex
+	// path is guaranteed to be the absolute current path of commander.
 	path string
 	// checkin is a buffered channel. It's length limits the amount of goroutines running commands at once.
 	checkin chan struct{}
 }
 
-func newCommander() commander {
+func newCommander(goroutines int) commander {
 	path, err := os.Getwd()
 	if err != nil {
-		log.Fatal("getting current dir:", err)
+		log.Fatal("commander: getting current dir:", err)
 	}
-	goroutines := runtime.NumCPU() / 2
-	if goroutines == 0 {
-		goroutines = 1
+	if goroutines < 1 {
+		log.Fatal("commander: invalid number of goroutines argument")
 	}
 	log.Println("setting max simultaneous commands to", goroutines)
 	return commander{
 		path:    path,
 		checkin: make(chan struct{}, goroutines),
-		Mutex:   &sync.Mutex{},
 	}
 }
 
@@ -48,14 +44,14 @@ func (c *commander) cloneOrUpdateRepo(repo string) {
 			c.Mkdir(d, dirMode)
 		}
 		c.Chdir(d)
-		c.run(false, "git", "clone", fmt.Sprintf("%s/%s", hostURL, repo))
+		c.Run("git", "clone", fmt.Sprintf("%s/%s", hostURL, repo))
 		return
 	}
 
 	c.Chdir(repo)
 	log.Printf("repo exists, updating %s", repo)
-	c.run(false, "git", "fetch")
-	c.run(false, "git", "pull")
+	c.Run("git", "fetch")
+	c.Run("git", "pull")
 }
 
 func (r commander) Stat(path string) (os.FileInfo, error) {
@@ -74,29 +70,32 @@ func (r commander) join(path string) string {
 	return filepath.Join(r.path, path)
 }
 
+// Start begins command execution in commander's current directory and returns immediately.
+// Prints command output on finish. Calls os.Exit(1) on error.
+func (r *commander) Start(name string, arg ...string) {
+	r.run(true, name, arg...)
+}
+
+// Run executes command in commander's current directory and waits for it to finish.
+// Prints command output. If command returns non-zero exit code then result is logged
+// and os.Exit(1) is called.
+func (r *commander) Run(name string, arg ...string) {
+	r.run(false, name, arg...)
+}
+
 func (r *commander) run(async bool, name string, arg ...string) {
 	r.checkin <- struct{}{} // Check-in for work.
 	cmd := exec.Command(name, arg...)
-	r.Lock() // protect Chdir and cmd.Start
-	defer r.Unlock()
-	path := r.path
-	err := os.Chdir(path)
-	cwd, _ := os.Getwd()
-	if err != nil {
-		log.Fatal("os.Chdir error: ", err)
-	}
+
 	var b bytes.Buffer
 	cmd.Stdout = &b
 	cmd.Stderr = &b
-	err = cmd.Start()
+	cmd.Dir = r.path
+	err := cmd.Start()
 	if err != nil {
-		log.Fatalf("%s\ncmd %s with err: %q at dir %q", b.String(), cmd.String(), err, cwd)
+		log.Fatalf("%s\ncmd %s with err: %q at dir %q", b.String(), cmd.String(), err, r.path)
 	}
 
-	err = os.Chdir(r.path)
-	if err != nil {
-		log.Fatalf("changing directory to %s, from %s: %s", r.path, path, err)
-	}
 	done := make(chan struct{})
 	go func() {
 		if async {
@@ -104,7 +103,7 @@ func (r *commander) run(async bool, name string, arg ...string) {
 		}
 		err = cmd.Wait()
 		if err != nil {
-			log.Fatalf("%s\ncmd %s with err: %v at dir %q", b.String(), cmd.String(), err, path)
+			log.Fatalf("%s\ncmd %s with err: %v at dir %q", b.String(), cmd.String(), err, r.path)
 		}
 		log.Printf("cmd %s finished with output:\n%s", cmd, b.String())
 		<-r.checkin // Check-out
