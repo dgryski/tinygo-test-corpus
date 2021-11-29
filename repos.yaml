@@ -151,7 +151,7 @@
   - math/fixed
   - riff
   - webp
-    # 'tiff', -- fails because os.File.ReadAt is not implemented
+  - tiff
 - repo: golang/geo
   subdirs:
   - r1
