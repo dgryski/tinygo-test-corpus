@@ -5,9 +5,8 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"os/exec"
 	"path/filepath"
-	"strings"
+	"regexp"
 
 	"gopkg.in/yaml.v2"
 )
@@ -23,6 +22,8 @@ const (
 func main() {
 	configYaml := flag.String("config", "repos.yaml", "yaml of repositories to run")
 	compiler := flag.String("compiler", "tinygo", "use this go compiler")
+	runPattern := flag.String("run", "", "compiler will run on all repo names matching this pattern (regexp)")
+	parallelism := flag.Int("parallel", 2, "max number of goroutines running compiler at any time")
 
 	flag.Parse()
 
@@ -36,39 +37,42 @@ func main() {
 		log.Printf("Finished!\n%d/%d repos tested\n%d passed subdir tests\n", countRepo, len(repos), countSubdir)
 	}()
 
+	// Which repos to run.
+	re, err := regexp.Compile(*runPattern)
+	if err != nil {
+		log.Fatal("compiling run regexp:", err)
+	}
+
 	// Workspace setup and cleanup.
-	baseDir, err := os.Getwd()
-	if err != nil {
-		log.Fatal("getting current dir:", err)
-	}
-	corpusDir := filepath.Join(baseDir, corpusFolderName)
-	if strings.HasSuffix(*compiler, "tinygo") {
-		mustrun(*compiler, "clean")
-	}
-	if err != nil {
-		log.Fatal("calling `%v clean`:", *compiler, err)
-	}
-	os.Mkdir(corpusDir, dirMode) // force directory creation if not exist.
-	_, err = os.ReadDir(corpusDir)
+	goos := newCommander(*parallelism)
+	goos.Run(*compiler, "clean")
+
+	goos.Mkdir(corpusFolderName, dirMode) // force directory creation if not exist.
+	_, err = goos.Stat(corpusFolderName)
 	if err != nil {
 		log.Fatal("reading corpus directory: ", err)
 	}
+	goos.Chdir(corpusFolderName)
+	corpusDir := goos.path
 
-	// Commence testing logic.
+	// Commence testing logic. Start from latest repo additions (end of repos).
 	for _, repo := range repos {
-		os.Chdir(corpusDir)
-		cloneOrUpdateRepo(repo.Repo)
+		if !re.MatchString(repo.Repo) {
+			continue
+		}
+		goos.Chdir(corpusDir)
+		goos.cloneOrUpdateRepo(repo.Repo)
 		repoBase := filepath.Join(corpusDir, repo.Repo)
-		os.Chdir(repoBase)
+		goos.Chdir(repoBase)
 
-		if _, err := os.Stat("go.mod"); err != nil {
+		if _, err := goos.Stat("go.mod"); err != nil {
 			log.Printf("creating %s/go.mod: running `go mod init`\n", repoBase)
-			mustrun("go", "mod", "init", fmt.Sprintf("%s/%s", host, repo.Repo))
-			mustrun("go", "get", "-t", ".")
+			goos.Run("go", "mod", "init", fmt.Sprintf("%s/%s", host, repo.Repo))
+			goos.Run("go", "get", "-t", ".")
 		}
 		tags := ""
 		if repo.Tags != "" {
-			tags = fmt.Sprintf("%s", repo.Tags)
+			tags = repo.Tags
 		}
 		dirs := []string{"."}
 		if len(repo.Subdirs) > 0 {
@@ -77,48 +81,17 @@ func main() {
 
 		for _, subdir := range dirs {
 			if subdir != "." {
-				os.Chdir(subdir)
+				goos.Chdir(subdir)
 			}
-			out1 := mustrun(*compiler, "test", "-v", "-tags="+tags)
+			goos.Start(*compiler, "test", "-v", "-tags="+tags)
 			countSubdir++
-			log.Printf("package %s:\n%s\n", filepath.Join(repo.Repo, subdir), out1)
 			if subdir != "." {
-				os.Chdir(repoBase)
+				goos.Chdir(repoBase)
 			}
 		}
 		countRepo++
 		log.Printf("finished module %d/%d %s", countRepo, len(repos), repo.Repo)
 	}
-}
-
-func cloneOrUpdateRepo(repo string) {
-	if _, err := os.Stat(repo); err != nil {
-		// Repo does not exist.
-		log.Printf("repo not found. cloning %s", repo)
-		d := filepath.Dir(repo)
-		if _, err := os.Stat(repo); err != nil {
-			log.Printf("creating directory %s", d)
-			os.Mkdir(d, dirMode)
-		}
-		os.Chdir(d)
-		mustrun("git", "clone", fmt.Sprintf("%s/%s", hostURL, repo))
-		return
-	}
-
-	os.Chdir(repo)
-	log.Printf("repo exists, updating %s", repo)
-	mustrun("git", "fetch")
-	mustrun("git", "pull")
-}
-
-func mustrun(name string, arg ...string) (stdout string) {
-	cmd := exec.Command(name, arg...)
-	b, err := cmd.CombinedOutput()
-	if err != nil {
-		cwd, _ := os.Getwd()
-		log.Fatalf("%s\ncmd %s with err: %q at dir %q", string(b), cmd.String(), err, cwd)
-	}
-	return string(b)
 }
 
 type T struct {
