@@ -55,7 +55,7 @@ func main() {
 	goos.Chdir(corpusFolderName)
 	corpusDir := goos.path
 
-	// Commence testing logic. Start from latest repo additions (end of repos).
+	// Commence testing logic.
 	for _, repo := range repos {
 		if !re.MatchString(repo.Repo) {
 			continue
