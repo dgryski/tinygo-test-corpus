@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"sync"
 )
 
 // commander keeps track of a directory and runs commands on them providing
@@ -17,6 +18,7 @@ type commander struct {
 	path string
 	// checkin is a buffered channel. It's length limits the amount of goroutines running commands at once.
 	checkin chan struct{}
+	wg      *sync.WaitGroup
 }
 
 func newCommander(goroutines int) commander {
@@ -31,6 +33,7 @@ func newCommander(goroutines int) commander {
 	return commander{
 		path:    path,
 		checkin: make(chan struct{}, goroutines),
+		wg:      new(sync.WaitGroup),
 	}
 }
 
@@ -97,10 +100,12 @@ func (r *commander) run(async bool, name string, arg ...string) {
 	}
 
 	done := make(chan struct{})
+	r.wg.Add(1)
 	go func() {
 		if async {
 			done <- struct{}{}
 		}
+
 		err = cmd.Wait()
 		if err != nil {
 			log.Fatalf("%s\ncmd %s with err: %v at dir %q", b.String(), cmd.String(), err, r.path)
@@ -110,6 +115,13 @@ func (r *commander) run(async bool, name string, arg ...string) {
 		if !async {
 			done <- struct{}{}
 		}
+		r.wg.Done()
 	}()
 	<-done
+}
+
+// Wait blocks execution until there are no more commands being executed asynchronously
+// by commander.
+func (r *commander) Wait() {
+	r.wg.Wait()
 }

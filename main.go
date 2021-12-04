@@ -92,6 +92,8 @@ func main() {
 		countRepo++
 		log.Printf("finished module %d/%d %s", countRepo, len(repos), repo.Repo)
 	}
+	goos.Wait()
+
 }
 
 type T struct {
