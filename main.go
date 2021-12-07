@@ -42,6 +42,17 @@ func main() {
 	if err != nil {
 		log.Fatal("compiling run regexp:", err)
 	}
+	if *runPattern != "" {
+		// pre-filter the repos list so the progress indicator is correct
+		var filtered []T
+		for _, repo := range repos {
+			if !re.MatchString(repo.Repo) {
+				continue
+			}
+			filtered = append(filtered, repo)
+		}
+		repos = filtered
+	}
 
 	// Workspace setup and cleanup.
 	goos := newCommander(*parallelism)
@@ -57,9 +68,6 @@ func main() {
 
 	// Commence testing logic.
 	for _, repo := range repos {
-		if !re.MatchString(repo.Repo) {
-			continue
-		}
 		goos.Chdir(corpusDir)
 		goos.cloneOrUpdateRepo(repo.Repo)
 		repoBase := filepath.Join(corpusDir, repo.Repo)
