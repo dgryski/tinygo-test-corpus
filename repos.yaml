@@ -173,7 +173,7 @@
 - repo: gonum/gonum
   tags: noasm
 - repo: gonum/gonum
-  tags: noasm
+  tags: noasm appengine
   subdirs:
   - blas/blas32
   - blas/cblas64
@@ -195,6 +195,8 @@
   - stat/distmat
   - stat/mds
   - stat/spatial
+  - stat/distmv
+  - stat/samplemv
             # 'blas/blas64', # -- TestDasum panic: blas: n < 0
             # 'blas/gonum', # -- panic: blas: n < 0
             # 'cmplxs', # -- TestAdd panic: cmplxs: slice lengths do not match
@@ -216,9 +218,7 @@
             # 'spatial/vptree', # -- panic: unimplemented: (reflect.Value).MapKeys()
             # 'stat', # -- panic: stat: slice length mismatch
             # 'stat/card', # -- /usr/local/go/src/encoding/gob/decode.go:562:21: MakeMapWithSize not declared by package reflect
-            # 'stat/distmv', # -- ld.lld-11: error: undefined symbol: golang.org/x/tools/container/intsets.havePOPCNT error: failed to link ...
             # 'stat/distuv', # -- panic: distuv: cannot compute Mode for Beta != 0\
-            # 'stat/samplemv', -- ld.lld-11: error: undefined symbol: golang.org/x/tools/container/intsets.havePOPCNT error: failed to link ...
             # 'stat/sampleuv', # -- TestWeightedTimeSeeded requires t.Skip(), otherwise passes
             # 'unit', # -- All Format tests fail. Similar to `num` subpackages.
 
