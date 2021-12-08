@@ -222,5 +222,6 @@
             # 'stat/sampleuv', # -- TestWeightedTimeSeeded requires t.Skip(), otherwise passes
             # 'unit', # -- All Format tests fail. Similar to `num` subpackages.
 
+- repo: cloudflare/bm
 # "cloudflare/ahocorasick" -- interp timeout building regexps in test
 # "google/open-location-code/go" -- alloc link error
