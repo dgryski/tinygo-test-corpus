@@ -65,6 +65,8 @@
 - repo: dgryski/go-xoroshiro
 - repo: dgryski/go-xoshiro
 - repo: dgryski/go-zlatlong
+- repo: dgryski/go-postings
+  tags: purego noasm
 - repo: golang/crypto
   tags: purego noasm
   subdirs:
@@ -222,4 +224,3 @@
 
 # "cloudflare/ahocorasick" -- interp timeout building regexps in test
 # "google/open-location-code/go" -- alloc link error
-# "dgryski/go-postings" -- nil map in AddDocument causes segfault
