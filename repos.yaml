@@ -223,5 +223,7 @@
             # 'unit', # -- All Format tests fail. Similar to `num` subpackages.
 
 - repo: cloudflare/bm
+- repo: cloudflare/bn256
+  tags: generic
 # "cloudflare/ahocorasick" -- interp timeout building regexps in test
 # "google/open-location-code/go" -- alloc link error
