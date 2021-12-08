@@ -132,11 +132,11 @@
   - internal/tag
   - search
   - unicode/rangetable
+  - message/catalog
     # 'collate/build', # -- panic: (reflect.Value).Interface: unexported
     # 'feature/plural', # TestSelect, TestOrdinal, TestCardinal fail
     # 'internal/catmsg', # TestCodec fails
     # 'internal/gen/bitfield', # panic: unimplemented: (reflect.Type).Name()
-    # 'message/catalog', # panic: runtime error: type assert failed
     # 'number', # fails due to printf %T formatting
 - repo: golang/image
   tags: noasm
