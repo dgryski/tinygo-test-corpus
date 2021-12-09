@@ -108,7 +108,7 @@ func (r *commander) run(async bool, name string, arg ...string) {
 
 		err = cmd.Wait()
 		if err != nil {
-			log.Fatalf("%s\ncmd %s with err: %v at dir %q", b.String(), cmd.String(), err, r.path)
+			log.Fatalf("%s\ncmd %s with err: %v at dir %q", b.String(), cmd.String(), err, cmd.Dir)
 		}
 		log.Printf("cmd %s finished with output:\n%s", cmd, b.String())
 		<-r.checkin // Check-out
