@@ -227,3 +227,5 @@
   tags: generic
 # "cloudflare/ahocorasick" -- interp timeout building regexps in test
 # "google/open-location-code/go" -- alloc link error
+- repo: chewxy/math32
+  tags: noasm
