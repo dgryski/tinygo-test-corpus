@@ -70,35 +70,35 @@
 - repo: golang/crypto
   tags: purego noasm
   subdirs:
-  - argon2
-  - bcrypt
-  - blake2b
-  - blake2s
-  - blowfish
-  - bn256
-  - cast5
-  - chacha20poly1305
-  - curve25519
-  - ed25519
-  - hkdf
-  - internal/subtle
-  - md4
-  - nacl/auth
-  - nacl/box
-  - nacl/secretbox
-  - nacl/sign
-  - openpgp/armor
-  - openpgp/elgamal
-  - openpgp/s2k
-  - pbkdf2
-  - pkcs12/internal/rc2
-  - ripemd160
-  - salsa20
-  - scrypt
-  - ssh/internal/bcrypt_pbkdf
-  - tea
-  - twofish
-  - xtea
+  - pkg: argon2
+  - pkg: bcrypt
+  - pkg: blake2b
+  - pkg: blake2s
+  - pkg: blowfish
+  - pkg: bn256
+  - pkg: cast5
+  - pkg: chacha20poly1305
+  - pkg: curve25519
+  - pkg: ed25519
+  - pkg: hkdf
+  - pkg: internal/subtle
+  - pkg: md4
+  - pkg: nacl/auth
+  - pkg: nacl/box
+  - pkg: nacl/secretbox
+  - pkg: nacl/sign
+  - pkg: openpgp/armor
+  - pkg: openpgp/elgamal
+  - pkg: openpgp/s2k
+  - pkg: pbkdf2
+  - pkg: pkcs12/internal/rc2
+  - pkg: ripemd160
+  - pkg: salsa20
+  - pkg: scrypt
+  - pkg: ssh/internal/bcrypt_pbkdf
+  - pkg: tea
+  - pkg: twofish
+  - pkg: xtea
     # chacha20 -- panic: chacha20: SetCounter attempted to rollback counter
     # cryptobyte -- panic: unimplemented: reflect.OverflowInt()
     # salsa20/salsa -- panic: runtime error: index out of range
@@ -108,33 +108,33 @@
 - repo: google/btree
 - repo: google/der-ascii
   subdirs:
-  - cmd/ascii2der
-  - cmd/der2ascii
-  - internal
+  - pkg: cmd/ascii2der
+  - pkg: cmd/der2ascii
+  - pkg: internal
 - repo: google/hilbert
 - repo: google/go-intervals
   subdirs:
-  - intervalset
-  - timespanset
+    - pkg: intervalset
+    - pkg: timespanset
 - repo: google/okay
 - repo: golang/text
   subdirs:
-  - encoding
-  - encoding/charmap
-  - encoding/htmlindex
-  - encoding/ianaindex
-  - encoding/japanese
-  - encoding/korean
-  - encoding/simplifiedchinese
-  - encoding/traditionalchinese
-  - encoding/unicode
-  - encoding/unicode/utf32
-  - internal/format
-  - internal/ucd
-  - internal/tag
-  - search
-  - unicode/rangetable
-  - message/catalog
+  - pkg: encoding
+  - pkg: encoding/charmap
+  - pkg: encoding/htmlindex
+  - pkg: encoding/ianaindex
+  - pkg: encoding/japanese
+  - pkg: encoding/korean
+  - pkg: encoding/simplifiedchinese
+  - pkg: encoding/traditionalchinese
+  - pkg: encoding/unicode
+  - pkg: encoding/unicode/utf32
+  - pkg: internal/format
+  - pkg: internal/ucd
+  - pkg: internal/tag
+  - pkg: search
+  - pkg: unicode/rangetable
+  - pkg: message/catalog
     # 'collate/build', # -- panic: (reflect.Value).Interface: unexported
     # 'feature/plural', # TestSelect, TestOrdinal, TestCardinal fail
     # 'internal/catmsg', # TestCodec fails
@@ -143,28 +143,29 @@
 - repo: golang/image
   tags: noasm
   subdirs:
-  - ccitt
-  - colornames
-  - draw
-  - font
-  - font/basicfont
-  - font/opentype
-  - font/plan9font
-  - math/fixed
-  - riff
-  - webp
-  - tiff
+  # - bmp: needs  _time.startTimer
+  - pkg: ccitt
+  - pkg: colornames
+  - pkg: draw
+  - pkg: font
+  - pkg: font/basicfont
+  - pkg: font/opentype
+  - pkg: font/plan9font
+  - pkg: math/fixed
+  - pkg: riff
+  - pkg: webp
+  - pkg: tiff
 - repo: golang/geo
   subdirs:
-  - r1
-  - r2
-  - r3
-  - s1
+  - pkg: r1
+  - pkg: r2
+  - pkg: r3
+  - pkg: s1
     #  's2', -- issue with structs as map keys?
 - repo: golang/groupcache
   subdirs:
-  - consistenthash
-  - lru
+  - pkg: consistenthash
+  - pkg: lru
 - repo: armon/go-radix
 - repo: armon/circbuf
 - repo: VividCortex/gohistogram
@@ -175,28 +176,28 @@
 - repo: gonum/gonum
   tags: noasm appengine
   subdirs:
-  - blas/blas32
-  - blas/cblas64
-  - blas/cblas128
-  - cmplxs/cscalar
-  - dsp/window
-  - floats/scalar
-  - integrate
-  - integrate/quad
-  - internal/cmplx64
-  - internal/testrand
-  - lapack/gonum
-  - mathext
-  - mathext/prng
-  - optimize/convex/lp
-  - optimize/functions
-  - spatial/r2
-  - spatial/r3
-  - stat/distmat
-  - stat/mds
-  - stat/spatial
-  - stat/distmv
-  - stat/samplemv
+  - pkg: blas/blas32
+  - pkg: blas/cblas64
+  - pkg: blas/cblas128
+  - pkg: cmplxs/cscalar
+  - pkg: dsp/window
+  - pkg: floats/scalar
+  - pkg: integrate
+  - pkg: integrate/quad
+  - pkg: internal/cmplx64
+  - pkg: internal/testrand
+  - pkg: lapack/gonum
+  - pkg: mathext
+  - pkg: mathext/prng
+  - pkg: optimize/convex/lp
+  - pkg: optimize/functions
+  - pkg: spatial/r2
+  - pkg: spatial/r3
+  - pkg: stat/distmat
+  - pkg: stat/mds
+  - pkg: stat/spatial
+  - pkg: stat/distmv
+  - pkg: stat/samplemv
             # 'blas/blas64', # -- TestDasum panic: blas: n < 0
             # 'blas/gonum', # -- panic: blas: n < 0
             # 'cmplxs', # -- TestAdd panic: cmplxs: slice lengths do not match

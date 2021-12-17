@@ -82,20 +82,19 @@ func main() {
 		if repo.Tags != "" {
 			tags = repo.Tags
 		}
-		dirs := []string{"."}
+
+		dirs := []Subdir{Subdir{Pkg: repo.Repo}}
 		if len(repo.Subdirs) > 0 {
 			dirs = repo.Subdirs
 		}
 
 		for _, subdir := range dirs {
-			if subdir != "." {
-				goos.Chdir(subdir)
+			if subdir.Pkg != repo.Repo {
+				goos.Chdir(subdir.Pkg)
 			}
 			goos.Start(*compiler, "test", "-v", "-tags="+tags)
 			countSubdir++
-			if subdir != "." {
-				goos.Chdir(repoBase)
-			}
+			goos.Chdir(repoBase)
 		}
 		countRepo++
 		log.Printf("finished module %d/%d %s", countRepo, len(repos), repo.Repo)
@@ -107,7 +106,12 @@ func main() {
 type T struct {
 	Repo    string
 	Tags    string
-	Subdirs []string
+	Subdirs []Subdir
+}
+
+type Subdir struct {
+	Pkg      string
+	SkipWASI bool
 }
 
 func loadRepos(f string) ([]T, error) {
