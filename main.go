@@ -24,6 +24,7 @@ func main() {
 	compiler := flag.String("compiler", "tinygo", "use this go compiler")
 	runPattern := flag.String("run", "", "compiler will run on all repo names matching this pattern (regexp)")
 	parallelism := flag.Int("parallel", 2, "max number of goroutines running compiler at any time")
+	wasi := flag.Bool("wasi", false, "run tests on wasi")
 
 	flag.Parse()
 
@@ -54,6 +55,11 @@ func main() {
 		repos = filtered
 	}
 
+	var target string
+	if *wasi {
+		target = "wasi"
+	}
+
 	// Workspace setup and cleanup.
 	goos := newCommander(*parallelism)
 	goos.Run(*compiler, "clean")
@@ -68,6 +74,11 @@ func main() {
 
 	// Commence testing logic.
 	for _, repo := range repos {
+		if *wasi && repo.SkipWASI {
+			log.Printf("skipping non-wasi package %v", repo.Repo)
+			continue
+		}
+
 		goos.Chdir(corpusDir)
 		goos.cloneOrUpdateRepo(repo.Repo)
 		repoBase := filepath.Join(corpusDir, repo.Repo)
@@ -89,10 +100,14 @@ func main() {
 		}
 
 		for _, subdir := range dirs {
+			if *wasi && subdir.SkipWASI {
+				log.Printf("skipping non-wasi package %v/%v", repo.Repo, subdir.Pkg)
+				continue
+			}
 			if subdir.Pkg != repo.Repo {
 				goos.Chdir(subdir.Pkg)
 			}
-			goos.Start(*compiler, "test", "-v", "-tags="+tags)
+			goos.Start(*compiler, "test", "-v", "-target="+target, "-tags="+tags)
 			countSubdir++
 			goos.Chdir(repoBase)
 		}
@@ -104,9 +119,10 @@ func main() {
 }
 
 type T struct {
-	Repo    string
-	Tags    string
-	Subdirs []Subdir
+	Repo     string
+	Tags     string
+	Subdirs  []Subdir
+	SkipWASI bool
 }
 
 type Subdir struct {

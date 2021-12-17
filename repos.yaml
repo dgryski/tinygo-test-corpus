@@ -19,6 +19,7 @@
 - repo: dgryski/go-hollow
 - repo: dgryski/go-idea
 - repo: dgryski/go-interp
+  skipwasi: true
 - repo: dgryski/go-intpat
 - repo: dgryski/go-jump
 - repo: dgryski/go-kcipher2
@@ -28,6 +29,7 @@
 - repo: dgryski/go-linlog
 - repo: dgryski/go-maglev
   tags: appengine # for dchest/siphash
+  skipwasi: true
 - repo: dgryski/go-marvin32
   tags: purego
 - repo: dgryski/go-md5crypt
@@ -38,12 +40,14 @@
   tags: purego noasm
 - repo: dgryski/go-mpchash
   tags: appengine # for dchest/siphash
+  skipwasi: true
 - repo: dgryski/go-neeva
 - repo: dgryski/go-nibz
 - repo: dgryski/go-nibblesort
 - repo: dgryski/go-pcgr
 - repo: dgryski/go-present
 - repo: dgryski/go-quicklz
+  skipwasi: true
 - repo: dgryski/go-radixsort
 - repo: dgryski/go-rbo
 - repo: dgryski/go-rc5
