@@ -19,7 +19,7 @@
 - repo: dgryski/go-hollow
 - repo: dgryski/go-idea
 - repo: dgryski/go-interp
-  skipwasi: true
+  skipwasi: true # too slow on wasi
 - repo: dgryski/go-intpat
 - repo: dgryski/go-jump
 - repo: dgryski/go-kcipher2
