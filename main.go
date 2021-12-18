@@ -58,6 +58,7 @@ func main() {
 	var target string
 	if *wasi {
 		target = "wasi"
+		os.Setenv("WASMTIME_BACKTRACE_DETAILS", "1")
 	}
 
 	// Workspace setup and cleanup.
