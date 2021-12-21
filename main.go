@@ -33,11 +33,6 @@ func main() {
 		log.Fatalf("unable to load repo configuration: %v", err)
 	}
 
-	var countSubdir, countRepo int
-	defer func() {
-		log.Printf("Finished!\n%d/%d repos tested\n%d passed subdir tests\n", countRepo, len(repos), countSubdir)
-	}()
-
 	// Which repos to run.
 	re, err := regexp.Compile(*runPattern)
 	if err != nil {
@@ -61,14 +56,26 @@ func main() {
 		os.Setenv("WASMTIME_BACKTRACE_DETAILS", "1")
 	}
 
+	var countSubdir, countRepo int
+	defer func() {
+		log.Printf("%d/%d repos tested\n%d passed subdir tests\n", countRepo, len(repos), countSubdir)
+		err := recover()
+		if err != nil {
+			log.Fatalf("Fatal error encountered: %v", err)
+		} else {
+			log.Println("Finished succesfully")
+		}
+	}()
+
 	// Workspace setup and cleanup.
 	goos := newCommander(*parallelism)
+	defer goos.terminate()
 	goos.Run(*compiler, "clean")
 
 	goos.Mkdir(corpusFolderName, dirMode) // force directory creation if not exist.
 	_, err = goos.Stat(corpusFolderName)
 	if err != nil {
-		log.Fatal("reading corpus directory: ", err)
+		log.Panic("reading corpus directory: ", err)
 	}
 	goos.Chdir(corpusFolderName)
 	corpusDir := goos.path
