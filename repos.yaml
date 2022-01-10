@@ -47,7 +47,7 @@
 - repo: dgryski/go-pcgr
 - repo: dgryski/go-present
 - repo: dgryski/go-quicklz
-  skipwasi: true
+  skipwasi: true # not 32-bit compliant
 - repo: dgryski/go-radixsort
 - repo: dgryski/go-rbo
 - repo: dgryski/go-rc5
@@ -120,19 +120,27 @@
   subdirs:
     - pkg: intervalset
     - pkg: timespanset
+      skipwasi: true # needs timezone stuff
 - repo: google/okay
 - repo: golang/text
   subdirs:
   - pkg: encoding
   - pkg: encoding/charmap
+    skipwasi: true # needs file access
   - pkg: encoding/htmlindex
   - pkg: encoding/ianaindex
   - pkg: encoding/japanese
+    skipwasi: true # needs file access
   - pkg: encoding/korean
+    skipwasi: true # needs file access
   - pkg: encoding/simplifiedchinese
+    skipwasi: true # needs file access
   - pkg: encoding/traditionalchinese
+    skipwasi: true # needs file access
   - pkg: encoding/unicode
+    skipwasI: true # needs file access
   - pkg: encoding/unicode/utf32
+    skipwasi: true # needs file access
   - pkg: internal/format
   - pkg: internal/ucd
   - pkg: internal/tag
@@ -151,21 +159,25 @@
   - pkg: ccitt
   - pkg: colornames
   - pkg: draw
+    skipwasi: true # needs file access
   - pkg: font
   - pkg: font/basicfont
   - pkg: font/opentype
   - pkg: font/plan9font
+    skipwasi: true # 2022/01/10 10:43:31 === RUN   TestMetrics: panic: (reflect.Value).Interface: unexported
   - pkg: math/fixed
   - pkg: riff
   - pkg: webp
+    skipwasi: true # needs file access
   - pkg: tiff
+    skipwasi: true # needs file access
 - repo: golang/geo
   subdirs:
   - pkg: r1
   - pkg: r2
   - pkg: r3
   - pkg: s1
-    #  's2', -- issue with structs as map keys?
+    #  's2' -- reflect.DeepEqual() -> MapKeys
 - repo: golang/groupcache
   subdirs:
   - pkg: consistenthash
@@ -191,6 +203,7 @@
   - pkg: internal/cmplx64
   - pkg: internal/testrand
   - pkg: lapack/gonum
+    skipwasi: true # takes too long
   - pkg: mathext
   - pkg: mathext/prng
   - pkg: optimize/convex/lp
@@ -201,6 +214,7 @@
   - pkg: stat/mds
   - pkg: stat/spatial
   - pkg: stat/distmv
+    skipwasi: true # takes too long
   - pkg: stat/samplemv
             # 'blas/blas64', # -- TestDasum panic: blas: n < 0
             # 'blas/gonum', # -- panic: blas: n < 0
@@ -231,6 +245,9 @@
 - repo: cloudflare/bn256
   tags: generic
 # "cloudflare/ahocorasick" -- interp timeout building regexps in test
-# "google/open-location-code/go" -- alloc link error
+- repo: google/open-location-code
+  subdirs:
+    - pkg: go
+      skipwasi: true # needs file access
 - repo: chewxy/math32
   tags: noasm
