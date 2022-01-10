@@ -25,6 +25,7 @@ func main() {
 	runPattern := flag.String("run", "", "compiler will run on all repo names matching this pattern (regexp)")
 	parallelism := flag.Int("parallel", 2, "max number of goroutines running compiler at any time")
 	wasi := flag.Bool("wasi", false, "run tests on wasi")
+	keepGoing := flag.Bool("k", false, "keep going after a failed test, logging all failures at the end")
 
 	flag.Parse()
 
@@ -108,7 +109,12 @@ func main() {
 			if subdir.Pkg != repo.Repo {
 				goos.Chdir(subdir.Pkg)
 			}
-			goos.Start(*compiler, "test", "-v", "-target="+target, "-tags="+tags)
+			cmd := []string{"test", "-v", "-target=" + target, "-tags=" + tags}
+			if *keepGoing {
+				goos.StartNonFatal(*compiler, cmd...)
+			} else {
+				goos.Start(*compiler, cmd...)
+			}
 			countSubdir++
 			goos.Chdir(repoBase)
 		}

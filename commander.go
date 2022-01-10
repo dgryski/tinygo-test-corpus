@@ -76,17 +76,21 @@ func (r commander) join(path string) string {
 // Start begins command execution in commander's current directory and returns immediately.
 // Prints command output on finish. Calls os.Exit(1) on error.
 func (r *commander) Start(name string, arg ...string) {
-	r.run(true, name, arg...)
+	r.run(true, true, name, arg...)
+}
+
+func (r *commander) StartNonFatal(name string, arg ...string) {
+	r.run(true, false, name, arg...)
 }
 
 // Run executes command in commander's current directory and waits for it to finish.
 // Prints command output. If command returns non-zero exit code then result is logged
 // and os.Exit(1) is called.
 func (r *commander) Run(name string, arg ...string) {
-	r.run(false, name, arg...)
+	r.run(false, true, name, arg...)
 }
 
-func (r *commander) run(async bool, name string, arg ...string) {
+func (r *commander) run(async bool, fatal bool, name string, arg ...string) {
 	r.checkin <- struct{}{} // Check-in for work.
 	cmd := exec.Command(name, arg...)
 
@@ -108,9 +112,14 @@ func (r *commander) run(async bool, name string, arg ...string) {
 
 		err = cmd.Wait()
 		if err != nil {
-			log.Fatalf("%s\ncmd %s with err: %v at dir %q", b.String(), cmd.String(), err, cmd.Dir)
+			msg := fmt.Sprintf("%s\ncmd %s with err: %v at dir %q", b.String(), cmd.String(), err, cmd.Dir)
+			if fatal {
+				log.Fatalln(msg)
+			} else {
+				log.Println(msg)
+			}
 		}
-		log.Printf("cmd %s finished with output:\n%s", cmd, b.String())
+
 		<-r.checkin // Check-out
 		if !async {
 			done <- struct{}{}
