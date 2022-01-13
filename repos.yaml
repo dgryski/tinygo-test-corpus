@@ -4,7 +4,8 @@
 - repo: dgryski/go-camellia
 - repo: dgryski/go-change
 - repo: dgryski/go-chaskey
-  tags: purego noasm
+  tags: purego noasm appengine
+  skipwasi: true  # dchest/siphash
 - repo: dgryski/go-clefia
 - repo: dgryski/go-clockpro
 - repo: dgryski/go-cobs
