@@ -121,7 +121,7 @@
   subdirs:
     - pkg: intervalset
     - pkg: timespanset
-      skipwasi: true # needs timezone stuff
+      skipwasi: true # needs timezone stuff: --dir=/usr/share/zoneinfo
 - repo: google/okay
 - repo: golang/text
   subdirs:
@@ -165,7 +165,7 @@
   - pkg: font/basicfont
   - pkg: font/opentype
   - pkg: font/plan9font
-    skipwasi: true # 2022/01/10 10:43:31 === RUN   TestMetrics: panic: (reflect.Value).Interface: unexported
+    skipwasi: true # needs file access
   - pkg: math/fixed
   - pkg: riff
   - pkg: webp
