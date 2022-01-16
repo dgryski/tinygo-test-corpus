@@ -17,22 +17,22 @@ type commander struct {
 	// path is guaranteed to be the absolute current path of commander.
 	path string
 	// checkin is a buffered channel. It's length limits the amount of goroutines running commands at once.
-	checkin chan struct{}
+	checkin chan *exec.Cmd
 	wg      *sync.WaitGroup
 }
 
 func newCommander(goroutines int) commander {
 	path, err := os.Getwd()
 	if err != nil {
-		log.Fatal("commander: getting current dir:", err)
+		log.Panic("commander: getting current dir:", err)
 	}
 	if goroutines < 1 {
-		log.Fatal("commander: invalid number of goroutines argument")
+		log.Panic("commander: invalid number of goroutines argument")
 	}
 	log.Println("setting max simultaneous commands to", goroutines)
 	return commander{
 		path:    path,
-		checkin: make(chan struct{}, goroutines),
+		checkin: make(chan *exec.Cmd, goroutines),
 		wg:      new(sync.WaitGroup),
 	}
 }
@@ -90,9 +90,10 @@ func (r *commander) Run(name string, arg ...string) {
 	r.run(false, true, name, arg...)
 }
 
-func (r *commander) run(async bool, fatal bool, name string, arg ...string) {
-	r.checkin <- struct{}{} // Check-in for work.
+
+func (r *commander) run(async bool, name string, arg ...string) {
 	cmd := exec.Command(name, arg...)
+	r.checkin <- cmd // Check-in for work.
 
 	var b bytes.Buffer
 	cmd.Stdout = &b
@@ -100,7 +101,7 @@ func (r *commander) run(async bool, fatal bool, name string, arg ...string) {
 	cmd.Dir = r.path
 	err := cmd.Start()
 	if err != nil {
-		log.Fatalf("%s\ncmd %s with err: %q at dir %q", b.String(), cmd.String(), err, r.path)
+		log.Panicf("%s\ncmd %s with err: %q at dir %q", b.String(), cmd.String(), err, r.path)
 	}
 
 	done := make(chan struct{})
@@ -133,4 +134,12 @@ func (r *commander) run(async bool, fatal bool, name string, arg ...string) {
 // by commander.
 func (r *commander) Wait() {
 	r.wg.Wait()
+}
+
+func (r *commander) terminate() {
+	for len(r.checkin) != 0 {
+		cmd := <-r.checkin
+		cmd.Process.Kill()
+	}
+	close(r.checkin)
 }
