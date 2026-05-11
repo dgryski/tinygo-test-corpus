@@ -5,7 +5,6 @@
 - repo: dgryski/go-change
 - repo: dgryski/go-chaskey
   tags: purego noasm appengine
-  skipwasi: true  # dchest/siphash
 - repo: dgryski/go-clefia
 - repo: dgryski/go-clockpro
 - repo: dgryski/go-cobs
@@ -30,7 +29,6 @@
 - repo: dgryski/go-linlog
 - repo: dgryski/go-maglev
   tags: appengine # for dchest/siphash
-  skipwasi: true
 - repo: dgryski/go-marvin32
   tags: purego
 - repo: dgryski/go-md5crypt
@@ -41,7 +39,6 @@
   tags: purego noasm
 - repo: dgryski/go-mpchash
   tags: appengine # for dchest/siphash
-  skipwasi: true
 - repo: dgryski/go-neeva
 - repo: dgryski/go-nibz
 - repo: dgryski/go-nibblesort
@@ -65,6 +62,7 @@
 - repo: dgryski/go-spritz
 - repo: dgryski/go-timewindow
 - repo: dgryski/go-tinymap
+- repo: dgryski/go-tinylz
 - repo: dgryski/go-trigram
 - repo: dgryski/go-twine
 - repo: dgryski/go-xoroshiro
@@ -86,7 +84,7 @@
   - pkg: curve25519
   - pkg: ed25519
   - pkg: hkdf
-  - pkg: internal/subtle
+  - pkg: internal/alias
   - pkg: md4
   - pkg: nacl/auth
   - pkg: nacl/box
@@ -111,6 +109,7 @@
 - repo: google/shlex
 - repo: google/boundedwait
 - repo: google/btree
+  #skipwasi: true
 - repo: google/der-ascii
   subdirs:
   - pkg: cmd/ascii2der
@@ -123,6 +122,7 @@
     - pkg: timespanset
       skipwasi: true # needs timezone stuff: --dir=/usr/share/zoneinfo
 - repo: google/okay
+- repo: google/go-patchutils
 - repo: golang/text
   subdirs:
   - pkg: encoding
@@ -163,11 +163,11 @@
   - pkg: tiff
 - repo: golang/geo
   subdirs:
+  - pkg: earth
   - pkg: r1
   - pkg: r2
   - pkg: r3
   - pkg: s1
-    #  's2' -- reflect.DeepEqual() -> MapKeys
 - repo: golang/groupcache
   subdirs:
   - pkg: consistenthash
@@ -234,10 +234,31 @@
 - repo: cloudflare/bm
 - repo: cloudflare/bn256
   tags: generic
-# "cloudflare/ahocorasick" -- interp timeout building regexps in test
+- repo: cloudflare/ahocorasick
 - repo: google/open-location-code
   subdirs:
     - pkg: go
       skipwasi: true # needs file access
 - repo: chewxy/math32
   tags: noasm
+- repo: russross/blackfriday
+- repo: openhistogram/circonusllhist
+  skipwasi: true #  math.MaxInt64 (untyped int constant 9223372036854775807) overflows int
+- repo: valyala/fasttemplate
+  skipwasi: true #  panic: startTag cannot be empty
+- repo: valyala/quicktemplate
+  skipwasi: true
+- repo: soypat/mu8
+- repo: brandondube/pctl
+- repo: julienschmidt/httprouter
+  skipwasi: true # panic: method must not be empty
+- repo: philhofer/fwd
+- repo: steveyen/gtreap
+- repo: blevesearch/sear
+  skipwasi: true # needs mmap-go
+- repo: orsinium-labs/tinymath
+- repo: orsinium-labs/jsony
+- repo: tidwall/gjson
+- repo: dchest/siphash
+  tags: appengine
+- repo: currantlabs/goheatshrink
