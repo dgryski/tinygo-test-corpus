@@ -262,3 +262,15 @@
 - repo: dchest/siphash
   tags: appengine
 - repo: currantlabs/goheatshrink
+- repo: vanadium/go.lib
+  subdirs:
+    - pkg: cmd/flagvar
+    - pkg: cmd/pflagvar
+    - pkg: envvar
+    - pkg: ibe
+    - pkg: lookpath
+    - pkg: nsync
+    - pkg: simplemr
+    - pkg: textutil
+    - pkg: timing
+    - pkg: toposort
