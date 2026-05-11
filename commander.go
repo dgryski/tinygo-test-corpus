@@ -19,6 +19,7 @@ type commander struct {
 	// checkin is a buffered channel. It's length limits the amount of goroutines running commands at once.
 	checkin chan struct{}
 	wg      *sync.WaitGroup
+	verbose bool
 }
 
 func newCommander(goroutines int) commander {
@@ -75,22 +76,22 @@ func (r commander) join(path string) string {
 
 // Start begins command execution in commander's current directory and returns immediately.
 // Prints command output on finish. Calls os.Exit(1) on error.
-func (r *commander) Start(name string, arg ...string) {
-	r.run(true, true, name, arg...)
+func (r *commander) Start(verbose bool, name string, arg ...string) {
+	r.run(true, true, verbose, name, arg...)
 }
 
-func (r *commander) StartNonFatal(name string, arg ...string) {
-	r.run(true, false, name, arg...)
+func (r *commander) StartNonFatal(verbose bool, name string, arg ...string) {
+	r.run(true, false, verbose, name, arg...)
 }
 
 // Run executes command in commander's current directory and waits for it to finish.
 // Prints command output. If command returns non-zero exit code then result is logged
 // and os.Exit(1) is called.
 func (r *commander) Run(name string, arg ...string) {
-	r.run(false, true, name, arg...)
+	r.run(false, true, false, name, arg...)
 }
 
-func (r *commander) run(async bool, fatal bool, name string, arg ...string) {
+func (r *commander) run(async bool, fatal bool, verbose bool, name string, arg ...string) {
 	r.checkin <- struct{}{} // Check-in for work.
 	cmd := exec.Command(name, arg...)
 
@@ -118,6 +119,8 @@ func (r *commander) run(async bool, fatal bool, name string, arg ...string) {
 			} else {
 				log.Println(msg)
 			}
+		} else if verbose || true {
+			log.Printf("%s\ncmd %s at dir %q", b.String(), cmd.String(), cmd.Dir)
 		}
 
 		<-r.checkin // Check-out

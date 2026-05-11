@@ -24,8 +24,12 @@ func main() {
 	compiler := flag.String("compiler", "tinygo", "use this go compiler")
 	runPattern := flag.String("run", "", "compiler will run on all repo names matching this pattern (regexp)")
 	parallelism := flag.Int("parallel", 2, "max number of goroutines running compiler at any time")
-	wasi := flag.Bool("wasi", false, "run tests on wasi")
+	wasip1 := flag.Bool("wasip1", false, "run tests on wasip1")
+	wasip2 := flag.Bool("wasip2", false, "run tests on wasip2")
+	wizer := flag.Bool("wizer", false, "run wizer on wasi output")
 	keepGoing := flag.Bool("k", false, "keep going after a failed test, logging all failures at the end")
+	verbose := flag.Bool("v", false, "print verbose output")
+	noUpdate := flag.Bool("no-update", false, "don't update repos")
 
 	flag.Parse()
 
@@ -57,8 +61,13 @@ func main() {
 	}
 
 	var target string
-	if *wasi {
-		target = "wasi"
+	if *wasip1 {
+		target = "wasip1"
+		os.Setenv("WASMTIME_BACKTRACE_DETAILS", "1")
+	}
+
+	if *wasip2 {
+		target = "wasip2"
 		os.Setenv("WASMTIME_BACKTRACE_DETAILS", "1")
 	}
 
@@ -76,13 +85,15 @@ func main() {
 
 	// Commence testing logic.
 	for _, repo := range repos {
-		if *wasi && repo.SkipWASI {
+		if (*wasip1 || *wasip2) && repo.SkipWASI {
 			log.Printf("skipping non-wasi package %v", repo.Repo)
 			continue
 		}
 
 		goos.Chdir(corpusDir)
-		goos.cloneOrUpdateRepo(repo.Repo)
+		if !*noUpdate {
+			goos.cloneOrUpdateRepo(repo.Repo)
+		}
 		repoBase := filepath.Join(corpusDir, repo.Repo)
 		goos.Chdir(repoBase)
 
@@ -91,29 +102,32 @@ func main() {
 			goos.Run("go", "mod", "init", fmt.Sprintf("%s/%s", host, repo.Repo))
 			goos.Run("go", "get", "-t", ".")
 		}
-		tags := ""
+		tags := "runtime_asserts"
 		if repo.Tags != "" {
-			tags = repo.Tags
+			tags += " " + repo.Tags
 		}
 
-		dirs := []Subdir{Subdir{Pkg: repo.Repo}}
+		dirs := []Subdir{{Pkg: repo.Repo}}
 		if len(repo.Subdirs) > 0 {
 			dirs = repo.Subdirs
 		}
 
 		for _, subdir := range dirs {
-			if *wasi && subdir.SkipWASI {
+			if (*wasip1 || *wasip2) && subdir.SkipWASI {
 				log.Printf("skipping non-wasi package %v/%v", repo.Repo, subdir.Pkg)
 				continue
 			}
 			if subdir.Pkg != repo.Repo {
 				goos.Chdir(subdir.Pkg)
 			}
-			cmd := []string{"test", "-v", "-target=" + target, "-tags=" + tags}
+			cmd := []string{"test", "-target=" + target, "-gc=precise", "-tags=" + tags}
+			if *wizer {
+				cmd = append(cmd, "-wizer-init")
+			}
 			if *keepGoing {
-				goos.StartNonFatal(*compiler, cmd...)
+				goos.StartNonFatal(*verbose, *compiler, cmd...)
 			} else {
-				goos.Start(*compiler, cmd...)
+				goos.Start(*verbose, *compiler, cmd...)
 			}
 			countSubdir++
 			goos.Chdir(repoBase)
