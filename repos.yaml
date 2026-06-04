@@ -102,9 +102,11 @@
   - pkg: tea
   - pkg: twofish
   - pkg: xtea
-    # chacha20 -- panic: chacha20: SetCounter attempted to rollback counter
+  - pkg: chacha20
+    skipwasi: true # panic
     # cryptobyte -- panic: unimplemented: reflect.OverflowInt()
-    # salsa20/salsa -- panic: runtime error: index out of range
+  - pkg: salsa20/salsa
+    skipwasi: true # panic: runtime error: index out of range
     # sha3 -- panic: unimplemented: (reflect.Type).NumMethod()
 - repo: google/shlex
 - repo: google/boundedwait
@@ -206,28 +208,36 @@
   - pkg: stat/distmv
     skipwasi: true # takes too long
   - pkg: stat/samplemv
-            # 'blas/blas64', # -- TestDasum panic: blas: n < 0
-            # 'blas/gonum', # -- panic: blas: n < 0
-            # 'cmplxs', # -- TestAdd panic: cmplxs: slice lengths do not match
-            # 'diff/fd', # -- panic: fd: slice length mismatch
-            # 'floats', # -- panic: floats: destination slice length does not match input
-            # 'graph', # ld.lld-11:  -- error: undefined symbol: reflect.mapiterkey (among other reflect errors)
-            # 'graph/topo', # -- Reflect: Same as above
+  - pkg: blas/blas64
+    skipwasi: true # panic TestDasum panic: blas: n < 0
+  - pkg: blas/gonum
+    skipwasi: true # panic: blas: n < 0
+  - pkg: cmplxs
+    skipwasi: true # panic TestAdd panic: cmplxs: slice lengths do not match
+  - pkg: diff/fd
+    skipwasi: true # panic: fd: slice length mismatch
+  - pkg: floats
+    skipwasi: true # panic: floats: destination slice length does not match input
+  - pkg: interp
+    skipwasi: true # panic: interp: input slices have different lengths
+  - pkg: spatial/barneshut
+  - pkg: spatial/kdtree
+  - pkg: spatial/vptree
+  - pkg: stat
+    skipwasi: true # panic: stat: slice length mismatch
+  - pkg: stat/card
+  - pkg: stat/distuv
+    skipwasi: true # panic: distuv: cannot compute Mode for Beta != 0\
+            # graph: runtime mapiniterinit and friends not found
+            # graph/topo: runtime.mapiterinit and friends not found
             # 'internal/math32', # -- /usr/local/go/src/testing/quick/quick.go:273:11: fType.NumOut undefined (type reflect.Type has no field or method NumOut)
-            # 'interp', # -- panic: interp: input slices have different lengths
-            # 'mat', # -- panic: mat: row index out of range
+            # mat: panic message slightly different -- TestDense fails
             # 'num/dual', # -- TestFormat unexpected result for fmt.Sprintf("%#v", T{Real:1.1, Emag:2.1}): got:"T{Real:1.1, Emag:2.1}", want:"dual.Number{Real:1.1, Emag:2.1}"    unexpected result for fmt.Sprintf("%#v", T{Real:-1.1, Emag:-2.1}): got:"T{Real:-1.1, Emag:-2.1}", want:"dual.Number{Real:-1.1, Emag:-2.1}"
             # 'num/dualcmplx', # -- TestFormat (similar to above)
             # 'num/dualquat', # -- TestFormat (similar to above)
             # 'num/hyperdual', # -- TestFormat (similar to above)
             # 'num/quat', # -- TestFormat (similar to above)
             # 'optimize', # // ld.lld-11: error: undefined symbol: golang.org/x/tools/container/intsets.havePOPCNT error: failed to link ...
-            # 'spatial/barneshut', # -- panic: unimplemented: (reflect.Value).MapKeys()
-            # 'spatial/kdtree', # -- panic: unimplemented: (reflect.Value).MapKeys()
-            # 'spatial/vptree', # -- panic: unimplemented: (reflect.Value).MapKeys()
-            # 'stat', # -- panic: stat: slice length mismatch
-            # 'stat/card', # -- /usr/local/go/src/encoding/gob/decode.go:562:21: MakeMapWithSize not declared by package reflect
-            # 'stat/distuv', # -- panic: distuv: cannot compute Mode for Beta != 0\
             # 'stat/sampleuv', # -- TestWeightedTimeSeeded requires t.Skip(), otherwise passes
             # 'unit', # -- All Format tests fail. Similar to `num` subpackages.
 
