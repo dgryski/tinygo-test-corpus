@@ -104,7 +104,7 @@
   - pkg: xtea
   - pkg: chacha20
     skipwasi: true # panic
-    # cryptobyte -- panic: unimplemented: reflect.OverflowInt()
+  - pkg: cryptobyte
   - pkg: salsa20/salsa
     skipwasi: true # panic: runtime error: index out of range
     # sha3 -- panic: unimplemented: (reflect.Type).NumMethod()
@@ -225,7 +225,6 @@
   - pkg: spatial/vptree
   - pkg: stat
     skipwasi: true # panic: stat: slice length mismatch
-  - pkg: stat/card
   - pkg: stat/distuv
     skipwasi: true # panic: distuv: cannot compute Mode for Beta != 0\
             # graph: runtime mapiniterinit and friends not found
@@ -238,6 +237,7 @@
             # 'num/hyperdual', # -- TestFormat (similar to above)
             # 'num/quat', # -- TestFormat (similar to above)
             # 'optimize', # // ld.lld-11: error: undefined symbol: golang.org/x/tools/container/intsets.havePOPCNT error: failed to link ...
+            # stat/card -- NumIn()
             # 'stat/sampleuv', # -- TestWeightedTimeSeeded requires t.Skip(), otherwise passes
             # 'unit', # -- All Format tests fail. Similar to `num` subpackages.
 
@@ -284,3 +284,4 @@
     - pkg: textutil
     - pkg: timing
     - pkg: toposort
+- repo: go-jose/go-jose
