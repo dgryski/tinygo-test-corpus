@@ -136,7 +136,9 @@ func main() {
 		log.Printf("finished module %d/%d %s", countRepo, len(repos), repo.Repo)
 	}
 	goos.Wait()
-
+	if f := goos.fails(); f > 0 {
+		log.Fatalf("%d failures running tests.", f)
+	}
 }
 
 type T struct {

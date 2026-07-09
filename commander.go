@@ -17,9 +17,23 @@ type commander struct {
 	// path is guaranteed to be the absolute current path of commander.
 	path string
 	// checkin is a buffered channel. It's length limits the amount of goroutines running commands at once.
-	checkin chan struct{}
-	wg      *sync.WaitGroup
-	verbose bool
+	checkin  chan struct{}
+	wg       *sync.WaitGroup
+	verbose  bool
+	failedMu sync.Mutex
+	failed   int
+}
+
+func (c *commander) fail() {
+	c.failedMu.Lock()
+	defer c.failedMu.Unlock()
+	c.failed++
+}
+
+func (c *commander) fails() int {
+	c.failedMu.Lock()
+	defer c.failedMu.Unlock()
+	return c.failed
 }
 
 func newCommander(goroutines int) commander {
@@ -58,16 +72,16 @@ func (c *commander) cloneOrUpdateRepo(repo string) {
 	c.Run("git", "pull")
 }
 
-func (r commander) Stat(path string) (os.FileInfo, error) {
+func (r *commander) Stat(path string) (os.FileInfo, error) {
 	return os.Stat(r.join(path))
 }
-func (r commander) Mkdir(d string, mode fs.FileMode) error {
+func (r *commander) Mkdir(d string, mode fs.FileMode) error {
 	return os.MkdirAll(r.join(d), mode)
 }
 func (r *commander) Chdir(path string) {
 	r.path = r.join(path)
 }
-func (r commander) join(path string) string {
+func (r *commander) join(path string) string {
 	if filepath.IsAbs(path) {
 		return path
 	}
@@ -118,6 +132,7 @@ func (r *commander) run(async bool, fatal bool, verbose bool, name string, arg .
 				log.Fatalln(msg)
 			} else {
 				log.Println(msg)
+				r.fail()
 			}
 		} else if verbose || true {
 			log.Printf("%s\ncmd %s at dir %q", b.String(), cmd.String(), cmd.Dir)
