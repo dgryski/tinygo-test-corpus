@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 	"sync"
 )
 
@@ -128,7 +129,10 @@ func (r *commander) run(async bool, fatal bool, verbose bool, name string, arg .
 		err = cmd.Wait()
 		if err != nil {
 			msg := fmt.Sprintf("%s\ncmd %s with err: %v at dir %q", b.String(), cmd.String(), err, cmd.Dir)
-			if fatal {
+			noGoFiles := strings.HasPrefix(b.String(), "no Go files in")
+			if noGoFiles {
+				log.Println("no Go files found in", cmd.Dir, " -- skipping")
+			} else if fatal {
 				log.Fatalln(msg)
 			} else {
 				log.Println(msg)
