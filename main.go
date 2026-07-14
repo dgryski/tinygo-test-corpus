@@ -108,7 +108,10 @@ func main() {
 			tags += " " + repo.Tags
 		}
 
-		dirs := []Subdir{{Pkg: repo.Repo, Skip: repo.Skip, SkipWASI: repo.SkipWASI}}
+		var dirs []Subdir
+		if repo.Skip != "true" {
+			dirs = append(dirs, Subdir{Pkg: repo.Repo, Skip: repo.Skip, SkipWASI: repo.SkipWASI})
+		}
 		if len(repo.Subdirs) > 0 {
 			dirs = append(dirs, repo.Subdirs...)
 		}

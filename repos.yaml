@@ -171,6 +171,7 @@
   - pkg: r3
   - pkg: s1
 - repo: golang/groupcache
+  skip: true
   subdirs:
   - pkg: consistenthash
   - pkg: lru
