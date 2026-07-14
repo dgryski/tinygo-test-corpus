@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"strings"
 
 	"gopkg.in/yaml.v2"
 )
@@ -85,7 +86,7 @@ func main() {
 
 	// Commence testing logic.
 	for _, repo := range repos {
-		if (*wasip1 || *wasip2) && repo.SkipWASI {
+		if (*wasip1 || *wasip2) && repo.SkipWASI == "true" {
 			log.Printf("skipping non-wasi package %v", repo.Repo)
 			continue
 		}
@@ -107,13 +108,13 @@ func main() {
 			tags += " " + repo.Tags
 		}
 
-		dirs := []Subdir{{Pkg: repo.Repo}}
+		dirs := []Subdir{{Pkg: repo.Repo, Skip: repo.Skip, SkipWASI: repo.SkipWASI}}
 		if len(repo.Subdirs) > 0 {
-			dirs = repo.Subdirs
+			dirs = append(dirs, repo.Subdirs...)
 		}
 
 		for _, subdir := range dirs {
-			if (*wasip1 || *wasip2) && subdir.SkipWASI {
+			if (*wasip1 || *wasip2) && subdir.SkipWASI == "true" {
 				log.Printf("skipping non-wasi package %v/%v", repo.Repo, subdir.Pkg)
 				continue
 			}
@@ -121,6 +122,17 @@ func main() {
 				goos.Chdir(subdir.Pkg)
 			}
 			cmd := []string{"test", "-target=" + target, "-gc=precise", "-tags=" + tags}
+
+			var skips []string
+			if subdir.Skip != "" {
+				skips = append(skips, subdir.Skip)
+			}
+			if subdir.SkipWASI != "" && (*wasip1 || *wasip2) {
+				skips = append(skips, subdir.SkipWASI)
+			}
+			if len(skips) > 0 {
+				cmd = append(cmd, "-skip="+strings.Join(skips, "|"))
+			}
 			if *wizer {
 				cmd = append(cmd, "-wizer-init")
 			}
@@ -145,12 +157,14 @@ type T struct {
 	Repo     string
 	Tags     string
 	Subdirs  []Subdir
-	SkipWASI bool
+	SkipWASI string
+	Skip     string
 }
 
 type Subdir struct {
 	Pkg      string
-	SkipWASI bool
+	SkipWASI string
+	Skip     string
 }
 
 func loadRepos(f string) ([]T, error) {

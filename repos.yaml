@@ -19,7 +19,7 @@
 - repo: dgryski/go-hollow
 - repo: dgryski/go-idea
 - repo: dgryski/go-interp
-  skipwasi: true # too slow on wasi
+  skipwasi: TestSearchBig
 - repo: dgryski/go-intpat
 - repo: dgryski/go-jump
 - repo: dgryski/go-kcipher2
@@ -103,15 +103,15 @@
   - pkg: twofish
   - pkg: xtea
   - pkg: chacha20
-    skipwasi: true # panic
-  - pkg: cryptobyte
+    skipwasi: TestSetCounter|TestLastBlock
+  - pkg: cryptobyte # panics
+    skipwasi: true
   - pkg: salsa20/salsa
-    skipwasi: true # panic: runtime error: index out of range
+    skipwasi: TestOutOfBoundsWrite
     # sha3 -- panic: unimplemented: (reflect.Type).NumMethod()
 - repo: google/shlex
 - repo: google/boundedwait
 - repo: google/btree
-  #skipwasi: true
 - repo: google/der-ascii
   subdirs:
   - pkg: cmd/ascii2der
@@ -215,7 +215,7 @@
   - pkg: cmplxs
     skipwasi: true # panic TestAdd panic: cmplxs: slice lengths do not match
   - pkg: diff/fd
-    skipwasi: true # panic: fd: slice length mismatch
+    skipwasi: TestGradientPanics
   - pkg: floats
     skipwasi: true # panic: floats: destination slice length does not match input
   - pkg: interp
