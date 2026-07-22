@@ -19,7 +19,7 @@
 - repo: dgryski/go-hollow
 - repo: dgryski/go-idea
 - repo: dgryski/go-interp
-  skipwasi: TestSearchBig
+  skip: TestSearchBig
 - repo: dgryski/go-intpat
 - repo: dgryski/go-jump
 - repo: dgryski/go-kcipher2
@@ -287,9 +287,12 @@
     - pkg: envvar
     - pkg: ibe
     - pkg: lookpath
+      skipwasi: true
     - pkg: nsync
     - pkg: simplemr
+      skipwasi: TestMultipleMappers
     - pkg: textutil
     - pkg: timing
     - pkg: toposort
 - repo: go-jose/go-jose
+  skipwasi: true # needs mmap-go
