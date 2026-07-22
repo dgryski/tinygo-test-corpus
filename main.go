@@ -86,7 +86,7 @@ func main() {
 
 	// Commence testing logic.
 	for _, repo := range repos {
-		if (*wasip1 || *wasip2) && repo.SkipWASI == "true" {
+		if (*wasip1 || *wasip2) && repo.SkipWASI == "true" && len(repo.Subdirs) == 0 {
 			log.Printf("skipping non-wasi package %v", repo.Repo)
 			continue
 		}
@@ -126,6 +126,17 @@ func main() {
 			}
 			cmd := []string{"test", "-target=" + target, "-gc=precise", "-tags=" + tags}
 
+			var stacksize string
+			if repo.Stacksize != "" {
+				stacksize = repo.Stacksize
+			}
+			if subdir.Stacksize != "" {
+				stacksize = subdir.Stacksize
+			}
+			if stacksize != "" {
+				cmd = append(cmd, "-stack-size="+stacksize)
+			}
+
 			var skips []string
 			if subdir.Skip != "" {
 				skips = append(skips, subdir.Skip)
@@ -157,17 +168,19 @@ func main() {
 }
 
 type T struct {
-	Repo     string
-	Tags     string
-	Subdirs  []Subdir
-	SkipWASI string
-	Skip     string
+	Repo      string
+	Tags      string
+	Subdirs   []Subdir
+	SkipWASI  string
+	Skip      string
+	Stacksize string
 }
 
 type Subdir struct {
-	Pkg      string
-	SkipWASI string
-	Skip     string
+	Pkg       string
+	SkipWASI  string
+	Skip      string
+	Stacksize string
 }
 
 func loadRepos(f string) ([]T, error) {

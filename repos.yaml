@@ -296,3 +296,22 @@
     - pkg: toposort
 - repo: go-jose/go-jose
   skipwasi: true # needs mmap-go
+- repo: google/go-jsonnet
+  skipwasi: true
+  stacksize: 10MB
+  subdirs:
+     - pkg: ast
+       stacksize: 1MB
+     - pkg: cmd/internal/cmd
+       stacksize: 1MB
+     - pkg: formatter
+       stacksize: 1MB
+     - pkg: internal/dump
+       stacksize: 1MB
+     - pkg: internal/parser
+       stacksize: 1MB
+     - pkg: internal/program
+       stacksize: 1MB
+     - pkg: linter
+       stacksize: 2MB
+       skipwasi: true # oom
