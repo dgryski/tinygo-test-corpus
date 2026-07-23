@@ -337,3 +337,10 @@
   - pkg: triple/literal
   - pkg: triple/node
   - pkg: triple/predicate
+- repo: google/font-go
+  skip: true
+  subdirs:
+    - pkg: fixed
+      skipwasi: SIMD
+    - pkg: floating
+      skipwasi: SIMD
