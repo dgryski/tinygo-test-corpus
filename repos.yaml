@@ -315,3 +315,25 @@
      - pkg: linter
        stacksize: 2MB
        skipwasi: true # oom
+- repo: google/badwolf
+  skip: true
+  subdirs:
+  - pkg: bql/grammar
+  - pkg: bql/lexer
+  - pkg: bql/planner
+    skipwasi: true
+  - pkg: bql/semantic
+  - pkg: bql/table
+  - pkg: io
+  - pkg: storage/memoization
+    skipwasi: true
+  - pkg: storage/memory
+  - pkg: tools/benchmark/generator/graph
+  - pkg: tools/benchmark/generator/tree
+  - pkg: tools/benchmark/runtime
+  - pkg: tools/compliance
+    skipwasi: true
+  - pkg: triple
+  - pkg: triple/literal
+  - pkg: triple/node
+  - pkg: triple/predicate
