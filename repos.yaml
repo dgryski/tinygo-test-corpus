@@ -344,3 +344,23 @@
       skipwasi: SIMD
     - pkg: floating
       skipwasi: SIMD
+- repo: klauspost/compress
+  tags: noasm
+  subdirs:
+   - pkg: flate
+     skipwasi: TestWriter_Reset
+   - pkg: fse
+     skipwasi: TestReadNCount
+   - pkg: gzhttp/writer/gzkp
+   - pkg: gzhttp/writer/gzstd
+   - pkg: gzip
+   - pkg: huff0
+   - pkg: s2
+     skipwasi: true
+   - pkg: s2/cmd/internal/filepathx
+   - pkg: snappy
+   - pkg: snappy/xerial
+   - pkg: zip
+     skipwasi: TestZip64LargeDirectory|TestOpenReaderInsecurePath
+   - pkg: zlib
+   - pkg: zstd/internal/xxhash
