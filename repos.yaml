@@ -364,3 +364,29 @@
      skipwasi: TestZip64LargeDirectory|TestOpenReaderInsecurePath
    - pkg: zlib
    - pkg: zstd/internal/xxhash
+- repo: soypat/geometry
+  subdirs:
+    - pkg: ms1
+    - pkg: ms2
+    - pkg: ms3
+    - pkg: md1
+    - pkg: md2
+    - pkg: md3
+- repo: soypat/tinyboot
+  skip: true
+  skipwasi: true
+  subdirs:
+    - pkg: boot/gpt
+    - pkg: boot/mbr
+    - pkg: boot/picobin
+    - pkg: build/xelf
+    - pkg: cmd/picobin
+    - pkg: filesystem
+    - pkg: filesystem/fsfuzz
+- repo: soypat/piudf
+  subdirs:
+    - pkg: cmd/piudf
+    - pkg: internal/piulegacy
+    - skipwasi: DatasheetLazy|DatasheetEager
+    - pkg: internal/zlib
+    - pkg: piulex
