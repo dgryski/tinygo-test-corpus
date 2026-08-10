@@ -334,6 +334,7 @@
   - pkg: tools/compliance
     skipwasi: true
   - pkg: triple
+    skipwasi: true
   - pkg: triple/literal
   - pkg: triple/node
   - pkg: triple/predicate
