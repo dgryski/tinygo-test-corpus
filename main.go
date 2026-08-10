@@ -28,6 +28,7 @@ func main() {
 	wasip1 := flag.Bool("wasip1", false, "run tests on wasip1")
 	wasip2 := flag.Bool("wasip2", false, "run tests on wasip2")
 	wizer := flag.Bool("wizer", false, "run wizer on wasi output")
+	gc := flag.String("gc", "precise", "use this garbage collector")
 	keepGoing := flag.Bool("k", false, "keep going after a failed test, logging all failures at the end")
 	verbose := flag.Bool("v", false, "print verbose output")
 	noUpdate := flag.Bool("no-update", false, "don't update repos")
@@ -124,7 +125,7 @@ func main() {
 			if subdir.Pkg != repo.Repo {
 				goos.Chdir(subdir.Pkg)
 			}
-			cmd := []string{"test", "-target=" + target, "-gc=precise", "-tags=" + tags}
+			cmd := []string{"test", "-target=" + target, "-gc=" + *gc, "-tags=" + tags}
 
 			var stacksize string
 			if repo.Stacksize != "" {
