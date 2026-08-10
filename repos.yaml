@@ -388,6 +388,6 @@
   subdirs:
     - pkg: cmd/piudf
     - pkg: internal/piulegacy
-    - skipwasi: DatasheetLazy|DatasheetEager
+      skipwasi: DatasheetLazy|DatasheetEager
     - pkg: internal/zlib
     - pkg: piulex
