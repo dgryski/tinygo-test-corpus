@@ -104,12 +104,9 @@
   - pkg: twofish
   - pkg: xtea
   - pkg: chacha20
-    skipwasi: TestSetCounter|TestLastBlock
-  - pkg: cryptobyte # panics
-    skipwasi: true
+  - pkg: cryptobyte
   - pkg: salsa20/salsa
-    skipwasi: TestOutOfBoundsWrite
-    # sha3 -- panic: unimplemented: (reflect.Type).NumMethod()
+  # sha3 -- panic: unimplemented: (reflect.Type).NumMethod()
 - repo: google/shlex
 - repo: google/boundedwait
 - repo: google/btree
@@ -215,38 +212,37 @@
     skipwasi: true # takes too long
   - pkg: stat/samplemv
   - pkg: blas/blas64
-    skipwasi: true # panic TestDasum panic: blas: n < 0
   - pkg: blas/gonum
-    skipwasi: true # panic: blas: n < 0
   - pkg: cmplxs
-    skipwasi: true # panic TestAdd panic: cmplxs: slice lengths do not match
   - pkg: diff/fd
-    skipwasi: TestGradientPanics
   - pkg: floats
-    skipwasi: true # panic: floats: destination slice length does not match input
   - pkg: interp
-    skipwasi: true # panic: interp: input slices have different lengths
   - pkg: spatial/barneshut
   - pkg: spatial/kdtree
   - pkg: spatial/vptree
   - pkg: stat
-    skipwasi: true # panic: stat: slice length mismatch
   - pkg: stat/distuv
-    skipwasi: true # panic: distuv: cannot compute Mode for Beta != 0\
-            # graph: runtime mapiniterinit and friends not found
-            # graph/topo: runtime.mapiterinit and friends not found
-            # 'internal/math32', # -- /usr/local/go/src/testing/quick/quick.go:273:11: fType.NumOut undefined (type reflect.Type has no field or method NumOut)
-            # mat: panic message slightly different -- TestDense fails
-            # 'num/dual', # -- TestFormat unexpected result for fmt.Sprintf("%#v", T{Real:1.1, Emag:2.1}): got:"T{Real:1.1, Emag:2.1}", want:"dual.Number{Real:1.1, Emag:2.1}"    unexpected result for fmt.Sprintf("%#v", T{Real:-1.1, Emag:-2.1}): got:"T{Real:-1.1, Emag:-2.1}", want:"dual.Number{Real:-1.1, Emag:-2.1}"
-            # 'num/dualcmplx', # -- TestFormat (similar to above)
-            # 'num/dualquat', # -- TestFormat (similar to above)
-            # 'num/hyperdual', # -- TestFormat (similar to above)
-            # 'num/quat', # -- TestFormat (similar to above)
-            # 'optimize', # // ld.lld-11: error: undefined symbol: golang.org/x/tools/container/intsets.havePOPCNT error: failed to link ...
-            # stat/card -- NumIn()
-            # 'stat/sampleuv', # -- TestWeightedTimeSeeded requires t.Skip(), otherwise passes
-            # 'unit', # -- All Format tests fail. Similar to `num` subpackages.
-
+  - pkg: mat
+    skip: Dense|Maybe
+  - pkg: num/dual
+    skip: TestFormat
+  - pkg: num/dualcmplx
+    skip: TestFormat
+  - pkg: num/dualquat
+    skip: TestFormat
+  - pkg: num/hyperdual
+    skip: TestFormat
+  - pkg: num/quat
+    skip: TestFormat
+  - pkg: unit
+    skip: Format
+  - pkg: stat/card
+    skip: "TestBinaryEncoding|TestRegisterInvalid"
+  - pkg: optimize
+  # graph: runtime mapiniterinit and friends not found
+  # graph/topo: runtime.mapiterinit and friends not found
+  # 'internal/math32', # -- /usr/local/go/src/testing/quick/quick.go:273:11: fType.NumOut undefined (type reflect.Type has no field or method NumOut)
+  # stat/sampleuv # needs IsVariadic for go-cmp
 - repo: cloudflare/bm
 - repo: cloudflare/bn256
   tags: generic
@@ -262,13 +258,10 @@
 - repo: openhistogram/circonusllhist
   skipwasi: true #  math.MaxInt64 (untyped int constant 9223372036854775807) overflows int
 - repo: valyala/fasttemplate
-  skipwasi: true #  panic: startTag cannot be empty
 - repo: valyala/quicktemplate
-  skipwasi: true
 - repo: soypat/mu8
 - repo: brandondube/pctl
 - repo: julienschmidt/httprouter
-  skipwasi: true # panic: method must not be empty
 - repo: philhofer/fwd
 - repo: steveyen/gtreap
 - repo: blevesearch/sear
@@ -295,7 +288,16 @@
     - pkg: timing
     - pkg: toposort
 - repo: go-jose/go-jose
-  skipwasi: true # needs mmap-go
+  subdirs:
+     - pkg: cipher
+     - pkg: cryptosigner
+     - pkg: fuzz
+     - pkg: json
+       stacksize: 2MB
+       skip: TestHTTPDecoding
+     - pkg: jwt
+     - pkg: testutils/assert
+     - pkg: testutils/require
 - repo: google/go-jsonnet
   skipwasi: true
   stacksize: 10MB
@@ -321,22 +323,20 @@
   - pkg: bql/grammar
   - pkg: bql/lexer
   - pkg: bql/planner
-    skipwasi: true
   - pkg: bql/semantic
   - pkg: bql/table
   - pkg: io
   - pkg: storage/memoization
-    skipwasi: true
   - pkg: storage/memory
   - pkg: tools/benchmark/generator/graph
   - pkg: tools/benchmark/generator/tree
   - pkg: tools/benchmark/runtime
   - pkg: tools/compliance
-    skipwasi: true
   - pkg: triple
     skipwasi: true
   - pkg: triple/literal
   - pkg: triple/node
+    skip: TestUUID # upstream llvm bug on darwin
   - pkg: triple/predicate
 - repo: google/font-go
   skip: true
@@ -349,15 +349,13 @@
   tags: noasm
   subdirs:
    - pkg: flate
-     skipwasi: TestWriter_Reset
    - pkg: fse
-     skipwasi: TestReadNCount
    - pkg: gzhttp/writer/gzkp
    - pkg: gzhttp/writer/gzstd
    - pkg: gzip
    - pkg: huff0
    - pkg: s2
-     skipwasi: true
+     skipwasi: true # too many tests OOM
    - pkg: s2/cmd/internal/filepathx
    - pkg: snappy
    - pkg: snappy/xerial
@@ -382,7 +380,9 @@
     - pkg: boot/picobin
     - pkg: build/xelf
     - pkg: cmd/picobin
+      skipwasi: true
     - pkg: filesystem
+      skipwasi: true
     - pkg: filesystem/fsfuzz
 - repo: soypat/piudf
   subdirs:
