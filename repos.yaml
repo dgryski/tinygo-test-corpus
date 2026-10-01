@@ -391,3 +391,5 @@
       skipwasi: DatasheetLazy|DatasheetEager
     - pkg: internal/zlib
     - pkg: piulex
+- repo: minio/minlz
+  tags: "pureno noasm"
