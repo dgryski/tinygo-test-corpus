@@ -180,7 +180,9 @@
 - repo: armon/go-radix
 - repo: armon/circbuf
 - repo: VividCortex/gohistogram
+  skip: TestAllocs
 - repo: cespare/xxhash
+  skip: TestAllocs
   tags: appengine
 - repo: gonum/gonum
   tags: noasm
@@ -262,6 +264,7 @@
 - repo: soypat/mu8
 - repo: brandondube/pctl
 - repo: julienschmidt/httprouter
+  skip: TestPathCleanMallocs
 - repo: philhofer/fwd
 - repo: steveyen/gtreap
 - repo: blevesearch/sear
@@ -363,6 +366,7 @@
      skipwasi: TestZip64LargeDirectory|TestOpenReaderInsecurePath
    - pkg: zlib
    - pkg: zstd/internal/xxhash
+     skip: TestAllocs
 - repo: soypat/geometry
   subdirs:
     - pkg: ms1
@@ -388,8 +392,10 @@
   subdirs:
     - pkg: cmd/piudf
     - pkg: internal/piulegacy
+      skip: ^(TestEagerNavigationAllocs|TestObjStmLazyCacheHitAllocs|TestResolveAllocs)$
       skipwasi: DatasheetLazy|DatasheetEager
     - pkg: internal/zlib
     - pkg: piulex
+      skip: TestEmitterAllocs
 - repo: minio/minlz
   tags: "pureno noasm"
