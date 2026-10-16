@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
+	"sync"
 
 	"gopkg.in/yaml.v2"
 )
@@ -40,7 +41,7 @@ func main() {
 		log.Fatalf("unable to load repo configuration: %v", err)
 	}
 
-	var countSubdir, countRepo int
+	var countSubdir, countRepo, failures, pending int
 	defer func() {
 		log.Printf("Finished!\n%d/%d repos tested\n%d passed subdir tests\n", countRepo, len(repos), countSubdir)
 	}()
@@ -73,8 +74,54 @@ func main() {
 		os.Setenv("WASMTIME_BACKTRACE_DETAILS", "1")
 	}
 
+	type moduleState struct {
+		outstanding int
+		queued      bool
+	}
+	modules := make(map[string]*moduleState)
+
+	finishModule := func(repo string) {
+		countRepo++
+		log.Printf("finished module %d/%d %s", countRepo, len(repos), repo)
+	}
+
+	// Called from worker goroutines, so guarded by a mutex.
+	var startMu sync.Mutex
+	startedModules := make(map[string]bool)
+	onStart := func(j job) {
+		startMu.Lock()
+		defer startMu.Unlock()
+		if startedModules[j.tag] {
+			return
+		}
+		startedModules[j.tag] = true
+		log.Printf("starting module %d/%d %s", len(startedModules), len(repos), j.tag)
+	}
+
+	onResult := func(r result) {
+		pending--
+		if r.err != nil {
+			if r.job.fatal {
+				log.Fatalln(r.failure())
+			}
+			log.Println(r.failure())
+			failures++
+		} else {
+			countSubdir++
+			if r.job.verbose {
+				log.Printf("%s\ncmd %s at dir %q", r.output, r.job, r.job.dir)
+			}
+		}
+		m := modules[r.job.tag]
+		m.outstanding--
+		if m.outstanding == 0 && m.queued {
+			finishModule(r.job.tag)
+		}
+	}
+
 	// Workspace setup and cleanup.
 	goos := newCommander(*parallelism)
+	goos.onStart = onStart
 	goos.Run(*compiler, "clean")
 
 	goos.Mkdir(corpusFolderName, dirMode) // force directory creation if not exist.
@@ -108,6 +155,9 @@ func main() {
 		if repo.Tags != "" {
 			tags += " " + repo.Tags
 		}
+
+		state := &moduleState{}
+		modules[repo.Repo] = state
 
 		var dirs []Subdir
 		if repo.Skip != "true" {
@@ -151,20 +201,19 @@ func main() {
 			if *wizer {
 				cmd = append(cmd, "-wizer-init")
 			}
-			if *keepGoing {
-				goos.StartNonFatal(*verbose, *compiler, cmd...)
-			} else {
-				goos.Start(*verbose, *compiler, cmd...)
-			}
-			countSubdir++
+			state.outstanding++
+			pending++
+			goos.Submit(goos.Job(repo.Repo, !*keepGoing, *verbose, *compiler, cmd...), onResult)
 			goos.Chdir(repoBase)
 		}
-		countRepo++
-		log.Printf("finished module %d/%d %s", countRepo, len(repos), repo.Repo)
+		state.queued = true
+		if state.outstanding == 0 {
+			finishModule(repo.Repo)
+		}
 	}
-	goos.Wait()
-	if f := goos.fails(); f > 0 {
-		log.Fatalf("%d failures running tests.", f)
+	goos.Drain(pending, onResult)
+	if failures > 0 {
+		log.Fatalf("%d failures running tests.", failures)
 	}
 }
 
