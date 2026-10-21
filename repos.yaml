@@ -91,9 +91,6 @@
   - pkg: nacl/box
   - pkg: nacl/secretbox
   - pkg: nacl/sign
-  - pkg: openpgp/armor
-  - pkg: openpgp/elgamal
-  - pkg: openpgp/s2k
   - pkg: pbkdf2
   - pkg: pkcs12/internal/rc2
   - pkg: ripemd160
