@@ -177,7 +177,6 @@
 - repo: armon/go-radix
 - repo: armon/circbuf
 - repo: VividCortex/gohistogram
-  skip: TestAllocs
 - repo: cespare/xxhash
   skip: TestAllocs
   tags: appengine
@@ -389,7 +388,7 @@
   subdirs:
     - pkg: cmd/piudf
     - pkg: internal/piulegacy
-      skip: ^(TestEagerNavigationAllocs|TestObjStmLazyCacheHitAllocs|TestResolveAllocs)$
+      skip: ^(TestObjStmLazyCacheHitAllocs|TestResolveAllocs)$
       skipwasi: DatasheetLazy|DatasheetEager
     - pkg: internal/zlib
     - pkg: piulex
